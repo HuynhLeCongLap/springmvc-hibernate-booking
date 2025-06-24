@@ -250,50 +250,7 @@
     <div class="container-fluid">
       <div class="row">
         <!-- Sidebar -->
-        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
-          <div class="position-sticky pt-3">
-            <div class="d-flex align-items-center justify-content-center mb-4">
-              <h3 class="mb-0">Cinema Booking</h3>
-            </div>
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/admin/">
-                  <i class="bi bi-speedometer2"></i> Tổng quan
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/admin/bookings">
-                  <i class="bi bi-calendar-check"></i> Quản lý đặt phòng
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/admin/rooms">
-                  <i class="bi bi-grid"></i> Quản lý phòng
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/admin/timeslots">
-                  <i class="bi bi-clock"></i> Quản lý khung giờ
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="${pageContext.request.contextPath}/admin/decorations">
-                  <i class="bi bi-palette"></i> Quản lý trang trí
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/admin/reports">
-                  <i class="bi bi-bar-chart"></i> Báo cáo
-                </a>
-              </li>
-              <li class="nav-item mt-4">
-                <a class="nav-link" href="${pageContext.request.contextPath}/logout">
-                  <i class="bi bi-box-arrow-left"></i> Đăng xuất
-                </a>
-              </li>
-            </ul>
-          </div>
-        </nav>
+        <jsp:include page="/WEB-INF/components/nav-admin.jsp" />
 
         <!-- Main content -->
         <main class="col-md-9 ms-sm-auto col-lg-10" style="padding-left: 0px !important; padding-right: 0px !important;">
@@ -340,7 +297,7 @@
                 <div class="col-md-4 mb-4">
                   <div class="card decoration-card">
                     <div class="position-relative">
-                      <img src="${pageContext.request.contextPath}${not empty decoration.imageUrl ? decoration.imageUrl : '/resources/images/default-decoration.jpg'}" class="decoration-image card-img-top" alt="${decoration.name}">
+                      <img src="${pageContext.request.contextPath}${not empty decoration.imageUrl ? decoration.imageUrl : '/resources/images/anhvu.png'}" class="decoration-image card-img-top" alt="${decoration.name}">
                     </div>
                     <div class="card-body">
                       <h5 class="card-title">${decoration.name}</h5>
@@ -386,7 +343,7 @@
                               <div class="file-upload-preview ${empty decoration.imageUrl ? 'empty' : ''}" id="imagesPreview${decoration.id}">
                                 <c:if test="${not empty decoration.imageUrl}">
                                   <div class="file-upload-preview-item">
-                                    <img src="${pageContext.request.contextPath}${not empty decoration.imageUrl ? decoration.imageUrl : '/resources/images/default-decoration.jpg'}" alt="${decoration.name} - hình">
+                                    <img src="${pageContext.request.contextPath}${not empty decoration.imageUrl ? decoration.imageUrl : '/resources/images/anhvu.png'}" alt="${decoration.name} - hình">
                                     <button type="button" class="remove-btn" title="Xóa">×</button>
                                   </div>
                                 </c:if>

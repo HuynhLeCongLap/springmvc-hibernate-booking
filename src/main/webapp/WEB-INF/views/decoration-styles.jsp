@@ -397,10 +397,10 @@
                 <div class="decoration-grid">
                     <c:forEach items="${decorationStyles}" var="style">
                         <div class="decoration-card">
-                            <img src="${pageContext.request.contextPath}${not empty style.imageUrl ? style.imageUrl : '/resources/images/default-decoration.jpg'}" 
+                            <img src="${pageContext.request.contextPath}${not empty style.imageUrl ? style.imageUrl : '/resources/images/anhvu.png'}"
                                  alt="${style.name}" 
                                  class="decoration-image"
-                                 onerror="this.src='${pageContext.request.contextPath}/resources/images/default-decoration.jpg'">
+                                 onerror="this.src='${pageContext.request.contextPath}/resources/images/anhvu.png'">
                             <div class="decoration-details">
                                 <h2 class="decoration-name">${style.name}</h2>
                                 <p class="decoration-description">${style.description}</p>                              

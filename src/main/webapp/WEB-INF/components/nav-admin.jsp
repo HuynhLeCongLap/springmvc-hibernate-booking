@@ -5,8 +5,8 @@
         >
           <div class="position-sticky pt-3">
             <div class="text-center mb-4">
-              <h5 class="text-white">FUTA Bus Lines</h5>
-              <p class="text-white-50">Hệ thống quản trị</p>
+              <h5 class="text-white">Cinema Booking</h5>
+              <p class="text-white-50">Hệ thống quản trị phòng tiệc</p>
             </div>
             <hr class="text-white-50">
             <ul class="nav flex-column">
@@ -15,39 +15,39 @@
                   class="nav-link"
                   href="${pageContext.request.contextPath}/admin/"
                 >
-                  <i class="bi bi-speedometer2"></i> Bảng điều khiển
+                  <i class="bi bi-speedometer2"></i> Tổng quan
                 </a>
               </li>
               <li class="nav-item">
                 <a
                   class="nav-link"
-                  href="${pageContext.request.contextPath}/admin/trips"
+                  href="${pageContext.request.contextPath}/admin/bookings"
                 >
-                  <i class="bi bi-calendar-check"></i> Quản lý chuyến đi
+                  <i class="bi bi-calendar-check"></i> Quản lý đặt phòng
                 </a>
               </li>
               <li class="nav-item">
                 <a
                   class="nav-link"
-                  href="${pageContext.request.contextPath}/admin/drivers"
+                  href="${pageContext.request.contextPath}/admin/rooms"
                 >
-                  <i class="bi bi-person-badge"></i> Quản lý tài xế
+                  <i class="bi bi-grid"></i> Quản lý phòng
                 </a>
               </li>
               <li class="nav-item">
                 <a
                   class="nav-link"
-                  href="${pageContext.request.contextPath}/admin/buses"
+                  href="${pageContext.request.contextPath}/admin/timeslots"
                 >
-                  <i class="bi bi-truck"></i> Quản lý xe
+                  <i class="bi bi-clock"></i> Quản lý khung giờ
                 </a>
               </li>
               <li class="nav-item">
                 <a
                   class="nav-link"
-                  href="${pageContext.request.contextPath}/admin/pickup-points"
+                  href="${pageContext.request.contextPath}/admin/decorations"
                 >
-                  <i class="bi bi-geo-alt"></i> Quản lý điểm dừng
+                  <i class="bi bi-palette"></i> Quản lý trang trí
                 </a>
               </li>
               <li class="nav-item">
@@ -55,10 +55,17 @@
                   class="nav-link"
                   href="${pageContext.request.contextPath}/admin/reports"
                 >
-                  <i class="bi bi-graph-up"></i> Báo cáo thống kê
+                  <i class="bi bi-bar-chart"></i> Báo cáo
                 </a>
               </li>
-              
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  href="${pageContext.request.contextPath}/logout"
+                >
+                  <i class="bi bi-box-arrow-left"></i> Đăng xuất
+                </a>
+              </li>
             </ul>
           </div>
         </nav>

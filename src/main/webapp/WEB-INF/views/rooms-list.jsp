@@ -45,6 +45,12 @@
             flex-direction: column;
         }
 
+        .logo-text h1 {
+            font-size: 32px;
+            margin: 0;
+            font-weight: bold;
+        }
+
         .top-header .container {
             display: flex;
             justify-content: space-between;
@@ -450,7 +456,12 @@
                                     </div>
                                 </div>
                                 <div class="room-price">
-                                    <fmt:formatNumber value="${room.price}" pattern="#,##0 ₫" />
+                                    <fmt:formatNumber value="${room.price}" pattern="#,#00 ₫" />
+                                </div>
+                                <div class="room-actions">
+                                    <a href="${pageContext.request.contextPath}/user/select-timeslot?roomId=${room.id}" class="btn-book">
+                                        <i class="fas fa-calendar-plus"></i> Đặt phòng
+                                    </a>
                                 </div>
                             </div>
                         </div>

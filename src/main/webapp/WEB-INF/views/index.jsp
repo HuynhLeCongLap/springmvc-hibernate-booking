@@ -57,6 +57,12 @@ uri="http://java.sun.com/jsp/jstl/core" %>
         flex-direction: column;
       }
 
+      .logo-text h1 {
+        font-size: 32px;
+        margin: 0;
+        font-weight: bold;
+      }
+
       .top-header .container {
         display: flex;
         justify-content: space-between;
