@@ -328,13 +328,18 @@
                           <input type="hidden" name="id" value="${decoration.id}">
                           
                           <div class="mb-3">
-                            <label for="name${decoration.id}" class="form-label">Tên Phong Cách</label>
-                            <input type="text" class="form-control" id="name${decoration.id}" name="name" value="${decoration.name}" required>
+                            <label for="name${decoration.id}" class="form-label">Tên Phong Cách <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name${decoration.id}" name="name" value="${decoration.name}" required oninvalid="this.setCustomValidity('Vui lòng nhập tên phong cách trang trí!')" oninput="setCustomValidity('')">
                           </div>
                           
                           <div class="mb-3">
                             <label for="description${decoration.id}" class="form-label">Mô Tả</label>
                             <textarea class="form-control" id="description${decoration.id}" name="description" rows="3">${decoration.description}</textarea>
+                          </div>
+                          
+                          <div class="mb-3">
+                            <label for="price${decoration.id}" class="form-label">Giá (VNĐ) <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="price${decoration.id}" name="price" value="${decoration.price}" required min="0" step="1000">
                           </div>
                           
                           <div class="mb-3">
@@ -407,13 +412,18 @@
           <form action="${pageContext.request.contextPath}/admin/decorations/add" method="post" enctype="multipart/form-data">
             <div class="modal-body">
               <div class="mb-3">
-                <label for="name" class="form-label">Tên Phong Cách</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+                <label for="name" class="form-label">Tên Phong Cách <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="name" name="name" required oninvalid="this.setCustomValidity('Vui lòng nhập tên phong cách trang trí!')" oninput="setCustomValidity('')">
               </div>
               
               <div class="mb-3">
                 <label for="description" class="form-label">Mô Tả</label>
                 <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+              </div>
+              
+              <div class="mb-3">
+                <label for="price" class="form-label">Giá (VNĐ) <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" id="price" name="price" required min="0" step="1000">
               </div>
               
               <div class="mb-3">

@@ -44,4 +44,8 @@ public interface BookingService {
     boolean isValidBookingTime(TimeSlot timeSlot, String bookingDateStr);
     
     void deleteBooking(Long id);
+    
+    void saveBooking(Booking booking);
+    
+    List<Booking> getBookingsByBookingDate(Date date);
 } 

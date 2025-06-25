@@ -151,7 +151,7 @@ public class AdminController {
                 .filter(booking -> "PENDING".equals(booking.getStatus()))
                 .count();
         long cancelledBookings = bookings.stream()
-                .filter(booking -> "CANCELLED_BY_ADMIN".equals(booking.getStatus()))
+                .filter(booking -> "CANCELLED_BY_ADMIN".equals(booking.getStatus()) || "CANCELLED_BY_USER".equals(booking.getStatus()))
                 .count();
 
         // Decoration style statistics
@@ -227,6 +227,9 @@ public class AdminController {
         // Add all necessary attributes to the model
         model.addAttribute("bookings", pagedBookings);
         model.addAttribute("rooms", roomService.getAllRooms());
+        model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("timeSlots", timeSlotService.getAllTimeSlots());
+        model.addAttribute("decorationStyles", decorationStyleService.getAllDecorationStyles());
         model.addAttribute("dateFilter", date);
         model.addAttribute("statusFilter", status);
         model.addAttribute("roomFilter", roomId);
@@ -254,6 +257,17 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("successMessage", "Đơn đặt phòng đã bị từ chối.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Không thể từ chối đơn đặt phòng: " + e.getMessage());
+        }
+        return "redirect:/admin/bookings";
+    }
+
+    @GetMapping("/bookings/delete/{id}")
+    public String deleteBooking(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            bookingService.deleteBooking(id);
+            redirectAttributes.addFlashAttribute("successMessage", "Xóa đơn đặt phòng thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Không thể xóa đơn đặt phòng: " + e.getMessage());
         }
         return "redirect:/admin/bookings";
     }
@@ -522,6 +536,7 @@ public class AdminController {
             // Update properties
             existingStyle.setName(decorationStyle.getName());
             existingStyle.setDescription(decorationStyle.getDescription());
+            existingStyle.setPrice(decorationStyle.getPrice());
 
             // Upload and set the image URL if a file is provided
             if (imageFile != null && !imageFile.isEmpty()) {
@@ -601,5 +616,57 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("errorMessage", "Đã xảy ra lỗi khi tạo đơn đặt phòng.");
             return "redirect:/admin/create-booking";
         }
+    }
+
+    @PostMapping("/bookings/update")
+    public String updateBooking(
+            @RequestParam Long bookingId,
+            @RequestParam Long userId,
+            @RequestParam Long roomId,
+            @RequestParam Long timeSlotId,
+            @RequestParam Long decorationStyleId,
+            @RequestParam String bookingDate,
+            @RequestParam String status,
+            RedirectAttributes redirectAttributes) {
+        Booking booking = bookingService.getBookingById(bookingId);
+        if (booking == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Không tìm thấy đơn đặt phòng.");
+            return "redirect:/admin/bookings";
+        }
+        User user = userService.getUserById(userId);
+        Room room = roomService.getRoomById(roomId);
+        TimeSlot timeSlot = timeSlotService.getTimeSlotById(timeSlotId);
+        DecorationStyle decorationStyle = decorationStyleService.getDecorationStyleById(decorationStyleId);
+        if (user == null || room == null || timeSlot == null || decorationStyle == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Thông tin không hợp lệ. Vui lòng kiểm tra lại.");
+            return "redirect:/admin/bookings";
+        }
+        // Kiểm tra trùng lịch (trừ chính booking này)
+        List<Booking> bookings = bookingService.getBookingsByRoom(room);
+        try {
+            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(bookingDate);
+            boolean conflict = bookings.stream().anyMatch(b ->
+                !b.getId().equals(bookingId) &&
+                b.getTimeSlot().getId().equals(timeSlotId) &&
+                b.getBookingDateScheduled() != null &&
+                b.getBookingDateScheduled().equals(date) &&
+                !b.getStatus().startsWith("CANCELLED")
+            );
+            if (conflict) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Phòng đã có người đặt ở khung giờ này.");
+                return "redirect:/admin/bookings";
+            }
+            booking.setUser(user);
+            booking.setRoom(room);
+            booking.setTimeSlot(timeSlot);
+            booking.setDecorationStyle(decorationStyle);
+            booking.setBookingDateScheduled(date);
+            booking.setStatus(status);
+            bookingService.saveBooking(booking);
+            redirectAttributes.addFlashAttribute("successMessage", "Cập nhật đơn đặt phòng thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi khi cập nhật đơn đặt phòng: " + e.getMessage());
+        }
+        return "redirect:/admin/bookings";
     }
 }

@@ -255,10 +255,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <c:if test="${empty bookings}">
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted">Không có dữ liệu đặt phòng trong khoảng thời gian này.</td>
+                                        </tr>
+                                    </c:if>
                                     <c:forEach var="style" items="${decorationStyles}">
                                         <c:set var="bookingCount" value="0" />
                                         <c:forEach var="booking" items="${bookings}">
-                                            <c:if test="${booking.decorationStyle.id == style.id}">
+                                            <c:if test="${booking.decorationStyle != null && booking.decorationStyle.id == style.id}">
                                                 <c:set var="bookingCount" value="${bookingCount + 1}" />
                                             </c:if>
                                         </c:forEach>
@@ -300,11 +305,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <c:if test="${empty bookings}">
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted">Không có đơn đặt phòng nào trong khoảng thời gian này.</td>
+                                        </tr>
+                                    </c:if>
                                     <c:forEach var="booking" items="${bookings}" begin="0" end="9">
                                         <tr>
                                             <td>#${booking.id}</td>
-                                            <td>${booking.user.fullName}</td>
-                                            <td>${booking.room.name}</td>
+                                            <td>${booking.user != null ? booking.user.fullName : ''}</td>
+                                            <td>${booking.room != null ? booking.room.roomName : ''}</td>
                                             <td><fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy HH:mm" /></td>
                                             <td><fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></td>
                                             <td>
@@ -318,20 +328,26 @@
                                                     <c:when test="${booking.status == 'CANCELLED'}">
                                                         <span class="badge bg-danger">Đã hủy</span>
                                                     </c:when>
+                                                    <c:when test="${booking.status == 'CANCELLED_BY_USER'}">
+                                                        <span class="badge bg-danger">Hủy bởi người dùng</span>
+                                                    </c:when>
+                                                    <c:when test="${booking.status == 'CANCELLED_BY_ADMIN'}">
+                                                        <span class="badge bg-danger">Hủy bởi quản trị viên</span>
+                                                    </c:when>
                                                 </c:choose>
                                             </td>
                                             <td><fmt:formatNumber value="${booking.totalPrice}" pattern="#,##0 ₫" /></td>
                                         </tr>
                                     </c:forEach>
+                                    <c:if test="${bookings.size() > 10}">
+                                        <div class="text-center mt-3">
+                                            <a href="${pageContext.request.contextPath}/admin/bookings" class="btn btn-outline-primary">
+                                                <i class="bi bi-list"></i> Xem tất cả
+                                            </a>
+                                        </div>
+                                    </c:if>
                                 </tbody>
                             </table>
-                            <c:if test="${bookings.size() > 10}">
-                                <div class="text-center mt-3">
-                                    <a href="${pageContext.request.contextPath}/admin/bookings" class="btn btn-outline-primary">
-                                        <i class="bi bi-list"></i> Xem tất cả
-                                    </a>
-                                </div>
-                            </c:if>
                         </div>
                     </div>
                 </div>

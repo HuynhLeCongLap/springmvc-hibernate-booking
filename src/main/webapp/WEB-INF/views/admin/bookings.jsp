@@ -261,6 +261,7 @@
                       <th scope="col">Khách hàng</th>
                       <th scope="col">Phòng</th>
                       <th scope="col">Ngày đặt</th>
+                      <th scope="col">Ngày tổ chức</th>
                       <th scope="col">Khung giờ</th>
                       <th scope="col">Trang trí</th>
                       <th scope="col">Tổng tiền</th>
@@ -275,6 +276,7 @@
                         <td>${booking.user.fullName}</td>
                         <td>${booking.room.roomName}</td>
                         <td><fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></td>
+                        <td><fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></td>
                         <td>${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</td>
                         <td>${booking.decorationStyle.name}</td>
                         <td><fmt:formatNumber value="${booking.totalPrice}" pattern="#,##0 ₫" /></td>
@@ -307,6 +309,12 @@
                             <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#bookingDetailsModal${booking.id}" title="Xem chi tiết">
                               <i class="bi bi-eye"></i>
                             </button>
+                            <button type="button" class="btn btn-sm btn-warning ms-1" data-bs-toggle="modal" data-bs-target="#editBookingModal${booking.id}" title="Chỉnh sửa đặt phòng">
+                              <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <a href="${pageContext.request.contextPath}/admin/bookings/delete/${booking.id}" class="btn btn-sm btn-danger ms-1" title="Xóa đặt phòng" onclick="return confirm('Bạn có chắc chắn muốn xóa đơn đặt phòng này?');">
+                              <i class="bi bi-trash"></i>
+                            </a>
                           </div>
                         </td>
                       </tr>
@@ -381,6 +389,72 @@
                           </div>
                         </div>
                       </div>
+                      
+                      <!-- Edit Booking Modal -->
+                      <div class="modal fade" id="editBookingModal${booking.id}" tabindex="-1" aria-labelledby="editBookingModalLabel${booking.id}" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="editBookingModalLabel${booking.id}">Chỉnh Sửa Đặt Phòng #${booking.id}</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form action="${pageContext.request.contextPath}/admin/bookings/update" method="post">
+                              <div class="modal-body">
+                                <input type="hidden" name="bookingId" value="${booking.id}" />
+                                <div class="mb-3">
+                                  <label for="userId${booking.id}" class="form-label">Khách hàng</label>
+                                  <select class="form-select" id="userId${booking.id}" name="userId" required>
+                                    <c:forEach items="${users}" var="user">
+                                      <option value="${user.id}" <c:if test="${user.id == booking.user.id}">selected</c:if>>${user.fullName} - ${user.numberPhone}</option>
+                                    </c:forEach>
+                                  </select>
+                                </div>
+                                <div class="mb-3">
+                                  <label for="roomId${booking.id}" class="form-label">Phòng</label>
+                                  <select class="form-select" id="roomId${booking.id}" name="roomId" required>
+                                    <c:forEach items="${rooms}" var="room">
+                                      <option value="${room.id}" <c:if test="${room.id == booking.room.id}">selected</c:if>>${room.roomName} (Sức chứa: ${room.capacity})</option>
+                                    </c:forEach>
+                                  </select>
+                                </div>
+                                <div class="mb-3">
+                                  <label for="timeSlotId${booking.id}" class="form-label">Khung giờ</label>
+                                  <select class="form-select" id="timeSlotId${booking.id}" name="timeSlotId" required>
+                                    <c:forEach items="${timeSlots}" var="slot">
+                                      <option value="${slot.id}" <c:if test="${slot.id == booking.timeSlot.id}">selected</c:if>>${slot.startTime} - ${slot.endTime}</option>
+                                    </c:forEach>
+                                  </select>
+                                </div>
+                                <div class="mb-3">
+                                  <label for="bookingDate${booking.id}" class="form-label">Ngày tổ chức</label>
+                                  <input type="date" class="form-control" id="bookingDate${booking.id}" name="bookingDate" value="<fmt:formatDate value='${booking.bookingDateScheduled}' pattern='yyyy-MM-dd'/>" required />
+                                </div>
+                                <div class="mb-3">
+                                  <label for="decorationStyleId${booking.id}" class="form-label">Phong cách trang trí</label>
+                                  <select class="form-select" id="decorationStyleId${booking.id}" name="decorationStyleId" required>
+                                    <c:forEach items="${decorationStyles}" var="style">
+                                      <option value="${style.id}" <c:if test="${style.id == booking.decorationStyle.id}">selected</c:if>>${style.name}</option>
+                                    </c:forEach>
+                                  </select>
+                                </div>
+                                <div class="mb-3">
+                                  <label for="status${booking.id}" class="form-label">Trạng thái</label>
+                                  <select class="form-select" id="status${booking.id}" name="status" required>
+                                    <option value="PENDING" <c:if test="${booking.status == 'PENDING'}">selected</c:if>>Chờ xác nhận</option>
+                                    <option value="CONFIRMED" <c:if test="${booking.status == 'CONFIRMED'}">selected</c:if>>Đã xác nhận</option>
+                                    <option value="CANCELLED_BY_USER" <c:if test="${booking.status == 'CANCELLED_BY_USER'}">selected</c:if>>Đã hủy bởi người dùng</option>
+                                    <option value="CANCELLED_BY_ADMIN" <c:if test="${booking.status == 'CANCELLED_BY_ADMIN'}">selected</c:if>>Đã hủy bởi quản trị viên</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
                     </c:forEach>
                     
                     <c:if test="${empty bookings}">
@@ -444,6 +518,12 @@
           if (roomFilter) url += 'roomId=' + roomFilter;
           
           window.location.href = url;
+        });
+
+        // Đặt min cho tất cả input ngày tổ chức trong các modal chỉnh sửa booking
+        var today = new Date().toISOString().split('T')[0];
+        document.querySelectorAll('input[type="date"][id^="bookingDate"]').forEach(function(input) {
+          input.setAttribute('min', today);
         });
       });
     </script>

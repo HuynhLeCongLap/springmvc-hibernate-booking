@@ -1,5 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %> 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -29,52 +29,52 @@
         color: #333;
         background-color: #f8f9fa;
       }
-      
+
       #sidebar {
         background-color: #1a237e;
         min-height: 100vh;
         color: white;
         transition: all 0.3s;
       }
-      
+
       #sidebar .nav-link {
         color: rgba(255, 255, 255, 0.8);
         padding: 12px 20px;
         border-left: 3px solid transparent;
         transition: all 0.2s;
       }
-      
+
       #sidebar .nav-link:hover {
         color: white;
         background-color: rgba(255, 255, 255, 0.1);
         border-left: 3px solid #e91e63;
       }
-      
+
       #sidebar .nav-link.active {
         color: white;
         background-color: rgba(255, 255, 255, 0.1);
         border-left: 3px solid #e91e63;
       }
-      
+
       #sidebar .nav-link i {
         margin-right: 10px;
         width: 20px;
         text-align: center;
       }
-      
+
       .admin-header {
         background-color: #1a237e;
         color: white;
         padding: 15px 0;
         margin-bottom: 20px;
       }
-      
+
       .admin-title {
         font-weight: bold;
         font-size: 24px;
         margin: 0;
       }
-      
+
       .action-btn {
         background-color: #1a237e;
         color: white;
@@ -84,16 +84,16 @@
         font-weight: 500;
         transition: all 0.2s;
       }
-      
+
       .action-btn:hover {
         background-color: #0e1442;
         color: white;
       }
-      
+
       .action-btn i {
         margin-right: 8px;
       }
-      
+
       .table-container {
         background-color: white;
         border-radius: 8px;
@@ -101,7 +101,7 @@
         padding: 20px;
         margin-bottom: 30px;
       }
-      
+
       .section-title {
         font-size: 18px;
         font-weight: bold;
@@ -110,12 +110,12 @@
         display: flex;
         align-items: center;
       }
-      
+
       .section-title i {
         margin-right: 10px;
         color: #1a237e;
       }
-      
+
       .badge.status-badge {
         padding: 6px 10px;
         font-weight: 500;
@@ -129,20 +129,20 @@
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(0,0,0,0.1);
       }
-      
+
       /* Fix modals */
       body.modal-open .room-card {
         transform: none !important;
         box-shadow: none !important;
         transition: none !important;
       }
-      
+
       /* Ensure modals display properly */
       .modal, .modal-dialog, .modal-content {
         transform: none !important;
         transition: opacity 0.15s linear !important;
       }
-      
+
       .room-image {
         height: 200px;
         object-fit: cover;
@@ -160,12 +160,12 @@
         border-radius: 20px;
         font-size: 14px;
       }
-      
+
       .file-upload-wrapper {
         position: relative;
         margin-bottom: 5px;
       }
-      
+
       .file-upload-preview {
         display: flex;
         justify-content: center;
@@ -177,7 +177,7 @@
         padding: 5px;
         background-color: #f8f9fa;
       }
-      
+
       .file-upload-preview-item {
         position: relative;
         width: 100%;
@@ -190,26 +190,26 @@
         justify-content: center;
         align-items: center;
       }
-      
+
       .file-upload-preview-item img {
         width: 100%;
         height: 100%;
         object-fit: contain;
       }
-      
+
       .file-upload-preview.empty::before {
         content: 'Chưa có hình ảnh';
         color: #6c757d;
         text-align: center;
       }
-      
+
       .room-gallery {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         margin-top: 10px;
       }
-      
+
       .room-gallery-item {
         width: 70px;
         height: 70px;
@@ -217,18 +217,18 @@
         overflow: hidden;
         cursor: pointer;
       }
-      
+
       .room-gallery-item img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.2s;
       }
-      
+
       .room-gallery-item:hover img {
         transform: scale(1.1);
       }
-      
+
       @media (max-width: 768px) {
         #sidebar {
           min-height: auto;
@@ -264,17 +264,17 @@
                 <button type="button" class="btn action-btn" data-bs-toggle="modal" data-bs-target="#addRoomModal">
                   <i class="bi bi-plus-circle"></i> Thêm Phòng Mới
                 </button>
-               
+
               </div>
             </div>
-            
+
             <c:if test="${not empty successMessage}">
               <div class="alert alert-success alert-dismissible fade show" role="alert">
                 ${successMessage}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
             </c:if>
-            
+
             <c:if test="${not empty errorMessage}">
               <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 ${errorMessage}
@@ -287,8 +287,8 @@
                 <div class="col-md-4 mb-4">
                   <div class="card room-card h-100">
                     <div class="position-relative">
-                      <img src="${pageContext.request.contextPath}${not empty room.imageUrl ? room.imageUrl : '/resources/images/default-room.jpg'}" 
-                           class="room-image card-img-top" 
+                      <img src="${pageContext.request.contextPath}${not empty room.imageUrl ? room.imageUrl : '/resources/images/default-room.jpg'}"
+                           class="room-image card-img-top"
                            alt="${room.roomName}"
                            onerror="this.src='${pageContext.request.contextPath}/resources/images/default-room.jpg'">
                       <div class="room-capacity">
@@ -301,7 +301,7 @@
                       <div class="d-flex justify-content-between align-items-center mb-3">
                         <span class="text-primary fw-bold"><fmt:formatNumber value="${room.price}" pattern="#,##0 ₫" /></span>
                       </div>
-                      
+
                       <div class="d-flex justify-content-between mt-3">
                         <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editRoomModal${room.id}">
                           <i class="bi bi-pencil"></i> Chỉnh sửa
@@ -313,7 +313,7 @@
                     </div>
                   </div>
                 </div>
-                
+
                 <!-- Edit Modal for room ${room.id} -->
                 <div class="modal fade" id="editRoomModal${room.id}" tabindex="-1" aria-labelledby="editRoomModalLabel${room.id}" aria-hidden="true">
                   <div class="modal-dialog">
@@ -325,27 +325,27 @@
                       <form action="${pageContext.request.contextPath}/admin/rooms/update" method="post" enctype="multipart/form-data">
                         <div class="modal-body">
                           <input type="hidden" name="id" value="${room.id}">
-                          
+
                           <div class="mb-3">
-                            <label for="name${room.id}" class="form-label">Tên Phòng</label>
-                            <input type="text" class="form-control" id="name${room.id}" name="name" value="${room.roomName}" required>
+                            <label for="roomNameEdit${room.id}" class="form-label">Tên Phòng</label>
+                            <input type="text" class="form-control" id="roomNameEdit${room.id}" name="roomName" value="${room.roomName}" required>
                           </div>
-                          
+
                           <div class="mb-3">
                             <label for="description${room.id}" class="form-label">Mô Tả</label>
                             <textarea class="form-control" id="description${room.id}" name="description" rows="3">${room.description}</textarea>
                           </div>
-                          
+
                           <div class="mb-3">
                             <label for="capacity${room.id}" class="form-label">Sức Chứa (người)</label>
                             <input type="number" class="form-control" id="capacity${room.id}" name="capacity" value="${room.capacity}" required min="1">
                           </div>
-                          
+
                           <div class="mb-3">
                             <label for="price${room.id}" class="form-label">Giá Thuê</label>
                             <input type="number" class="form-control" id="price${room.id}" name="price" value="${room.price}" required min="0">
                           </div>
-                          
+
                           <div class="mb-3">
                             <label class="form-label">Hình Ảnh</label>
                             <div class="file-upload-wrapper" data-existing-image="${pageContext.request.contextPath}${not empty room.imageUrl ? room.imageUrl : '/resources/images/default-room.jpg'}">
@@ -367,7 +367,7 @@
                     </div>
                   </div>
                 </div>
-                
+
                 <!-- Delete Modal for room ${room.id} -->
                 <div class="modal fade" id="deleteRoomModal${room.id}" tabindex="-1" aria-labelledby="deleteRoomModalLabel${room.id}" aria-hidden="true">
                   <div class="modal-dialog">
@@ -388,7 +388,7 @@
                   </div>
                 </div>
               </c:forEach>
-              
+
               <c:if test="${empty rooms}">
                 <div class="col-12">
                   <div class="alert alert-info" role="alert">
@@ -401,7 +401,7 @@
         </main>
       </div>
     </div>
-    
+
     <!-- Add Room Modal -->
     <div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="addRoomModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -413,25 +413,25 @@
           <form action="${pageContext.request.contextPath}/admin/rooms/add" method="post" enctype="multipart/form-data">
             <div class="modal-body">
               <div class="mb-3">
-                <label for="name" class="form-label">Tên Phòng</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+                <label for="roomNameAdd" class="form-label">Tên Phòng</label>
+                <input type="text" class="form-control" id="roomNameAdd" name="roomName" required>
               </div>
-              
+
               <div class="mb-3">
                 <label for="description" class="form-label">Mô Tả</label>
                 <textarea class="form-control" id="description" name="description" rows="3"></textarea>
               </div>
-              
+
               <div class="mb-3">
                 <label for="capacity" class="form-label">Sức Chứa (người)</label>
                 <input type="number" class="form-control" id="capacity" name="capacity" required min="1">
               </div>
-              
+
               <div class="mb-3">
                 <label for="price" class="form-label">Giá Thuê</label>
                 <input type="number" class="form-control" id="price" name="price" required min="0">
               </div>
-              
+
               <div class="mb-3">
                 <label for="imageFile" class="form-label">Hình Ảnh</label>
                 <div class="file-upload-wrapper">
@@ -449,7 +449,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Assign Rooms to TimeSlots Modal -->
     <div class="modal fade" id="assignRoomsModal" tabindex="-1" aria-labelledby="assignRoomsModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
@@ -469,7 +469,7 @@
                   </c:forEach>
                 </select>
               </div>
-              
+
               <div class="mb-3">
                 <label class="form-label">Chọn Phòng Khả Dụng</label>
                 <div class="card">

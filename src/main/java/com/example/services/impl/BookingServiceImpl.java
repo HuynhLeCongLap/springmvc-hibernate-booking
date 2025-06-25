@@ -57,27 +57,28 @@ public class BookingServiceImpl implements BookingService {
     
     @Override
     public List<Booking> getBookingsByDateScheduled(Date date) {
-        // Get all bookings
         List<Booking> allBookings = bookingDao.findAll();
-        
-        // Filter bookings by scheduled date
+        System.out.println("DEBUG: So sánh ngày booking với ngày hiện tại: " + date);
         return allBookings.stream()
-                .filter(booking -> isSameDay(booking.getBookingDateScheduled(), date))
+                .filter(booking -> {
+                    boolean same = isSameDay(booking.getBookingDateScheduled(), date);
+                    System.out.println("DEBUG: booking_id=" + booking.getId() + ", booking_date_scheduled=" + booking.getBookingDateScheduled() + ", today=" + date + ", isSameDay=" + same);
+                    return same;
+                })
                 .collect(Collectors.toList());
     }
     
     @Override
     public List<Booking> getBookingsByDateRange(Date startDate, Date endDate) {
-        // Get all bookings
         List<Booking> allBookings = bookingDao.findAll();
-        
-        // Filter bookings within date range
         return allBookings.stream()
                 .filter(booking -> {
                     Date bookingDate = booking.getBookingDateScheduled();
-                    return bookingDate != null && 
-                           (bookingDate.equals(startDate) || bookingDate.after(startDate)) && 
-                           (bookingDate.equals(endDate) || bookingDate.before(endDate));
+                    return bookingDate != null &&
+                        (   !bookingDate.before(startDate) && !bookingDate.after(endDate)
+                            || isSameDay(bookingDate, startDate)
+                            || isSameDay(bookingDate, endDate)
+                        );
                 })
                 .collect(Collectors.toList());
     }
@@ -166,32 +167,43 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public boolean isValidBookingTime(TimeSlot timeSlot, String bookingDateStr) {
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date bookingDate = dateFormat.parse(bookingDateStr);
-            
+            Date bookingDate = null;
+            // Try standard format first
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                bookingDate = dateFormat.parse(bookingDateStr);
+            } catch (ParseException e) {
+                // Try alternative format d-M-yyyy
+                try {
+                    SimpleDateFormat altFormat = new SimpleDateFormat("d-M-yyyy");
+                    bookingDate = altFormat.parse(bookingDateStr);
+                } catch (ParseException ex) {
+                    System.out.println("[DEBUG] Parse failed for both formats: " + bookingDateStr);
+                    return false;
+                }
+            }
             // Get current date and time
             Calendar currentCalendar = Calendar.getInstance();
             Date currentDate = currentCalendar.getTime();
-            
             // Set booking date calendar with the time from timeSlot
             Calendar bookingCalendar = Calendar.getInstance();
             bookingCalendar.setTime(bookingDate);
-            
             // Parse the start time (assuming format like "09:00")
             String[] timeParts = timeSlot.getStartTime().split(":");
             int hour = Integer.parseInt(timeParts[0]);
             int minute = Integer.parseInt(timeParts[1]);
-            
             bookingCalendar.set(Calendar.HOUR_OF_DAY, hour);
             bookingCalendar.set(Calendar.MINUTE, minute);
-            
+            System.out.println("[DEBUG] bookingDate: " + bookingDate + ", bookingCalendar: " + bookingCalendar.getTime() + ", currentDate: " + currentDate);
             // Compare dates
             if (bookingCalendar.getTime().before(currentDate)) {
+                System.out.println("[DEBUG] Booking time is in the past");
                 return false; // Booking time is in the past
             }
-            
+            System.out.println("[DEBUG] Booking time is valid");
             return true;
-        } catch (ParseException | NumberFormatException e) {
+        } catch (Exception e) {
+            System.out.println("[DEBUG] Exception in isValidBookingTime: " + e.getMessage());
             return false;
         }
     }
@@ -239,8 +251,23 @@ public class BookingServiceImpl implements BookingService {
         cal1.setTime(date1);
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(date2);
+        System.out.println("DEBUG: So sánh cal1=" + cal1.getTime() + " với cal2=" + cal2.getTime());
         return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
                 cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
                 cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+    }
+
+    @Override
+    public void saveBooking(Booking booking) {
+        bookingDao.save(booking);
+    }
+
+    // Lấy danh sách booking theo ngày đặt (bookingDate)
+    @Override
+    public List<Booking> getBookingsByBookingDate(Date date) {
+        List<Booking> allBookings = bookingDao.findAll();
+        return allBookings.stream()
+                .filter(booking -> isSameDay(booking.getBookingDate(), date))
+                .collect(Collectors.toList());
     }
 } 

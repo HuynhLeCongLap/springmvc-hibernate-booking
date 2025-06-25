@@ -164,6 +164,17 @@
         </div>
       </div>
       <div class="container-fluid py-4">
+        <!-- Hiển thị thông báo lỗi/thành công -->
+        <c:if test="${not empty errorMessage}">
+          <div class="alert alert-danger" role="alert">
+            ${errorMessage}
+          </div>
+        </c:if>
+        <c:if test="${not empty successMessage}">
+          <div class="alert alert-success" role="alert">
+            ${successMessage}
+          </div>
+        </c:if>
         <form action="${pageContext.request.contextPath}/admin/create-booking" method="post">
           <div class="mb-3">
             <label for="userId" class="form-label">Khách hàng</label>

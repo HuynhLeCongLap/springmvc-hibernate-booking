@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %> <%@ taglib
         prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> <%@ taglib prefix="fmt"
-                                                                         uri="http://java.sun.com/jsp/jstl/fmt" %>
+                                                                         uri="http://java.sun.com/jsp/jstl/fmt" %> <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -292,8 +292,8 @@
                   <i class="bi bi-palette"></i>
                 </div>
                 <div>
-                  <h6 class="card-subtitle mb-2 text-muted">Phong cách trang trí</h6>
-                  <h2 class="card-title mb-0">${stylesCount}</h2>
+                  <h6 class="card-subtitle mb-2 text-muted">Quản lý trang trí</h6>
+                  <h2 class="card-title mb-0">${empty stylesCount ? 0 : stylesCount}</h2>
                 </div>
               </div>
               <div class="card-footer bg-transparent border-0">
@@ -324,53 +324,60 @@
               </tr>
               </thead>
               <tbody>
-              <c:forEach items="${todayBookings}" var="booking" varStatus="loop">
-                <c:if test="${loop.index < 5}">
+              <c:choose>
+                <c:when test="${empty todayBookings}">
                   <tr>
-                    <td>${booking.id}</td>
-                    <td>${booking.user.fullName}</td>
-                    <td>${booking.room.name}</td>
-                    <td><fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></td>
-                    <td>${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</td>
-                    <td>
-                      <c:choose>
-                        <c:when test="${booking.status eq 'PENDING'}">
-                          <span class="badge bg-warning text-dark status-badge">Chờ xác nhận</span>
-                        </c:when>
-                        <c:when test="${booking.status eq 'CONFIRMED'}">
-                          <span class="badge bg-success status-badge">Đã xác nhận</span>
-                        </c:when>
-                        <c:when test="${booking.status eq 'CANCELLED'}">
-                          <span class="badge bg-danger status-badge">Đã hủy</span>
-                        </c:when>
-                        <c:when test="${booking.status eq 'REJECTED'}">
-                          <span class="badge bg-secondary status-badge">Đã từ chối</span>
-                        </c:when>
-                        <c:otherwise>
-                          <span class="badge bg-info status-badge">${booking.status}</span>
-                        </c:otherwise>
-                      </c:choose>
-                    </td>
-                    <td>
-                      <div class="d-flex">
-                        <c:if test="${booking.status eq 'PENDING'}">
-                          <a href="${pageContext.request.contextPath}/admin/bookings/confirm/${booking.id}" class="btn btn-sm btn-success me-1">
-                            <i class="bi bi-check-circle"></i>
-                          </a>
-                          <a href="${pageContext.request.contextPath}/admin/bookings/reject/${booking.id}" class="btn btn-sm btn-danger">
-                            <i class="bi bi-x-circle"></i>
-                          </a>
-                        </c:if>
-                      </div>
-                    </td>
+                    <td colspan="7" class="text-center">Không có đặt phòng nào hôm nay</td>
                   </tr>
-                </c:if>
-              </c:forEach>
-              <c:if test="${empty todayBookings}">
-                <tr>
-                  <td colspan="7" class="text-center">Không có đặt phòng nào hôm nay</td>
-                </tr>
-              </c:if>
+                </c:when>
+                <c:otherwise>
+                  <c:forEach items="${todayBookings}" var="booking" varStatus="loop">
+                    <c:if test="${loop.index < 5}">
+                      <tr>
+                        <td colspan="7" style="color:red;">DEBUG: booking = ${booking}</td>
+                      </tr>
+                      <tr>
+                        <td>${booking.id}</td>
+                        <td>${booking.user != null ? booking.user.fullName : ''}</td>
+                        <td>${booking.room != null ? booking.room.name : ''}</td>
+                        <td><fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></td>
+                        <td>${booking.timeSlot != null ? booking.timeSlot.startTime : ''} - ${booking.timeSlot != null ? booking.timeSlot.endTime : ''}</td>
+                        <td>
+                          <c:choose>
+                            <c:when test="${booking.status eq 'PENDING'}">
+                              <span class="badge bg-warning text-dark status-badge">Chờ xác nhận</span>
+                            </c:when>
+                            <c:when test="${booking.status eq 'CONFIRMED'}">
+                              <span class="badge bg-success status-badge">Đã xác nhận</span>
+                            </c:when>
+                            <c:when test="${booking.status eq 'CANCELLED'}">
+                              <span class="badge bg-danger status-badge">Đã hủy</span>
+                            </c:when>
+                            <c:when test="${booking.status eq 'REJECTED'}">
+                              <span class="badge bg-secondary status-badge">Đã từ chối</span>
+                            </c:when>
+                            <c:otherwise>
+                              <span class="badge bg-info status-badge">${booking.status}</span>
+                            </c:otherwise>
+                          </c:choose>
+                        </td>
+                        <td>
+                          <div class="d-flex">
+                            <c:if test="${booking.status eq 'PENDING'}">
+                              <a href="${pageContext.request.contextPath}/admin/bookings/confirm/${booking.id}" class="btn btn-sm btn-success me-1">
+                                <i class="bi bi-check-circle"></i>
+                              </a>
+                              <a href="${pageContext.request.contextPath}/admin/bookings/reject/${booking.id}" class="btn btn-sm btn-danger">
+                                <i class="bi bi-x-circle"></i>
+                              </a>
+                            </c:if>
+                          </div>
+                        </td>
+                      </tr>
+                    </c:if>
+                  </c:forEach>
+                </c:otherwise>
+              </c:choose>
               </tbody>
             </table>
           </div>
