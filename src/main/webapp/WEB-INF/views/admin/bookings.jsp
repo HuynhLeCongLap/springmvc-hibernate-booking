@@ -564,6 +564,21 @@
             document.getElementById('totalPrice' + bookingId).textContent = formatCurrency(total);
           });
         });
+
+        // Khi mở modal, cập nhật tổng tiền ngay lập tức
+        document.querySelectorAll('.modal').forEach(function(modal) {
+          modal.addEventListener('show.bs.modal', function(event) {
+            const bookingIdInput = this.querySelector('input[name="bookingId"]');
+            if (!bookingIdInput) return;
+            const bookingId = bookingIdInput.value;
+            const roomId = document.getElementById('roomId' + bookingId).value;
+            const styleId = document.getElementById('decorationStyleId' + bookingId).value;
+            let total = 0;
+            if (roomPrices[roomId]) total += roomPrices[roomId];
+            if (stylePrices[styleId]) total += stylePrices[styleId];
+            document.getElementById('totalPrice' + bookingId).textContent = formatCurrency(total);
+          });
+        });
       });
     </script>
   </body>

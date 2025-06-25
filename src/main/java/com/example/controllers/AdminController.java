@@ -671,6 +671,7 @@ public class AdminController {
             booking.setTimeSlot(timeSlot);
             booking.setBookingDateScheduled(date);
             booking.setStatus(status);
+            booking.setDecorationStyle(decorationStyle);
             bookingService.saveBooking(booking);
             redirectAttributes.addFlashAttribute("successMessage", "Cập nhật đơn đặt phòng thành công!");
         } catch (Exception e) {
