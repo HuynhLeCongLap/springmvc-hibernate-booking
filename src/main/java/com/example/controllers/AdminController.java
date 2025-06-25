@@ -609,6 +609,11 @@ public class AdminController {
         // Tạo booking
         Booking booking = bookingService.createBooking(user, room, timeSlot, decorationStyle, bookingDate);
         if (booking != null) {
+            double totalPrice = room.getPrice();
+            if (decorationStyle != null) {
+                totalPrice += decorationStyle.getPrice();
+            }
+            booking.setTotalPrice(totalPrice);
             bookingService.updateBookingStatus(booking.getId(), "CONFIRMED");
             redirectAttributes.addFlashAttribute("successMessage", "Tạo đơn đặt phòng thành công!");
             return "redirect:/admin/bookings";
@@ -658,8 +663,12 @@ public class AdminController {
             }
             booking.setUser(user);
             booking.setRoom(room);
+            double totalPrice = room.getPrice();
+            if (decorationStyle != null) {
+                totalPrice += decorationStyle.getPrice();
+            }
+            booking.setTotalPrice(totalPrice);
             booking.setTimeSlot(timeSlot);
-            booking.setDecorationStyle(decorationStyle);
             booking.setBookingDateScheduled(date);
             booking.setStatus(status);
             bookingService.saveBooking(booking);

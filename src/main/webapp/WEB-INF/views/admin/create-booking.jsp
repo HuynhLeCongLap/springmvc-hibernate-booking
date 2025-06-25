@@ -190,7 +190,9 @@
             <select class="form-select" id="roomId" name="roomId" required>
               <option value="">-- Chọn phòng --</option>
               <c:forEach items="${rooms}" var="room">
-                <option value="${room.id}">${room.roomName} (Sức chứa: ${room.capacity})</option>
+                <option value="${room.id}">
+                  ${room.roomName} (Sức chứa: ${room.capacity}) - Giá: <fmt:formatNumber value='${room.price}' type='currency'/>
+                </option>
               </c:forEach>
             </select>
           </div>
@@ -212,9 +214,15 @@
             <select class="form-select" id="decorationStyleId" name="decorationStyleId" required>
               <option value="">-- Chọn phong cách --</option>
               <c:forEach items="${decorationStyles}" var="style">
-                <option value="${style.id}">${style.name}</option>
+                <option value="${style.id}">
+                  ${style.name} - Giá: <fmt:formatNumber value='${style.price}' type='currency'/>
+                </option>
               </c:forEach>
             </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tổng tiền:</label>
+            <div id="totalPrice" style="font-weight:bold; color:#e91e63;">0 ₫</div>
           </div>
           <button type="submit" class="btn btn-success"><i class="fas fa-plus-circle"></i> Tạo Đặt Phòng</button>
           <a href="${pageContext.request.contextPath}/admin/bookings" class="btn btn-secondary ms-2">Quay lại</a>
@@ -223,5 +231,35 @@
     </main>
   </div>
 </div>
+<script>
+  const roomSelect = document.getElementById('roomId');
+  const styleSelect = document.getElementById('decorationStyleId');
+  const totalPriceDiv = document.getElementById('totalPrice');
+  // Map id -> price cho phòng
+  const roomPrices = {};
+  <c:forEach items="${rooms}" var="room">
+    roomPrices["${room.id}"] = ${room.price};
+  </c:forEach>
+  // Map id -> price cho style
+  const stylePrices = {};
+  <c:forEach items="${decorationStyles}" var="style">
+    stylePrices["${style.id}"] = ${style.price};
+  </c:forEach>
+  function formatCurrency(amount) {
+    return amount.toLocaleString('vi-VN') + ' ₫';
+  }
+  function updateTotalPrice() {
+    const roomId = roomSelect.value;
+    const styleId = styleSelect.value;
+    let total = 0;
+    if (roomPrices[roomId]) total += roomPrices[roomId];
+    if (stylePrices[styleId]) total += stylePrices[styleId];
+    totalPriceDiv.textContent = formatCurrency(total);
+  }
+  roomSelect.addEventListener('change', updateTotalPrice);
+  styleSelect.addEventListener('change', updateTotalPrice);
+  // Gọi khi load trang nếu đã có sẵn giá trị
+  updateTotalPrice();
+</script>
 </body>
 </html> 

@@ -411,9 +411,11 @@
                                 </div>
                                 <div class="mb-3">
                                   <label for="roomId${booking.id}" class="form-label">Phòng</label>
-                                  <select class="form-select" id="roomId${booking.id}" name="roomId" required>
+                                  <select class="form-select room-select" id="roomId${booking.id}" name="roomId" required data-booking-id="${booking.id}">
                                     <c:forEach items="${rooms}" var="room">
-                                      <option value="${room.id}" <c:if test="${room.id == booking.room.id}">selected</c:if>>${room.roomName} (Sức chứa: ${room.capacity})</option>
+                                      <option value="${room.id}" <c:if test="${room.id == booking.room.id}">selected</c:if>>
+                                        ${room.roomName} (Sức chứa: ${room.capacity}) - Giá: <fmt:formatNumber value='${room.price}' type='currency'/>
+                                      </option>
                                     </c:forEach>
                                   </select>
                                 </div>
@@ -431,9 +433,11 @@
                                 </div>
                                 <div class="mb-3">
                                   <label for="decorationStyleId${booking.id}" class="form-label">Phong cách trang trí</label>
-                                  <select class="form-select" id="decorationStyleId${booking.id}" name="decorationStyleId" required>
+                                  <select class="form-select style-select" id="decorationStyleId${booking.id}" name="decorationStyleId" required data-booking-id="${booking.id}">
                                     <c:forEach items="${decorationStyles}" var="style">
-                                      <option value="${style.id}" <c:if test="${style.id == booking.decorationStyle.id}">selected</c:if>>${style.name}</option>
+                                      <option value="${style.id}" <c:if test="${style.id == booking.decorationStyle.id}">selected</c:if>>
+                                        ${style.name} - Giá: <fmt:formatNumber value='${style.price}' type='currency'/>
+                                      </option>
                                     </c:forEach>
                                   </select>
                                 </div>
@@ -445,6 +449,12 @@
                                     <option value="CANCELLED_BY_USER" <c:if test="${booking.status == 'CANCELLED_BY_USER'}">selected</c:if>>Đã hủy bởi người dùng</option>
                                     <option value="CANCELLED_BY_ADMIN" <c:if test="${booking.status == 'CANCELLED_BY_ADMIN'}">selected</c:if>>Đã hủy bởi quản trị viên</option>
                                   </select>
+                                </div>
+                                <div class="mb-3">
+                                  <label class="form-label">Tổng tiền:</label>
+                                  <div id="totalPrice${booking.id}" style="font-weight:bold; color:#e91e63;">
+                                    <fmt:formatNumber value='${booking.totalPrice}' pattern='#,##0 ₫'/>
+                                  </div>
                                 </div>
                               </div>
                               <div class="modal-footer">
@@ -524,6 +534,30 @@
         var today = new Date().toISOString().split('T')[0];
         document.querySelectorAll('input[type="date"][id^="bookingDate"]').forEach(function(input) {
           input.setAttribute('min', today);
+        });
+
+        // Tổng tiền động cho từng modal chỉnh sửa booking
+        const roomPrices = {};
+        <c:forEach items="${rooms}" var="room">
+          roomPrices["${room.id}"] = ${room.price};
+        </c:forEach>
+        const stylePrices = {};
+        <c:forEach items="${decorationStyles}" var="style">
+          stylePrices["${style.id}"] = ${style.price};
+        </c:forEach>
+        function formatCurrency(amount) {
+          return amount.toLocaleString('vi-VN') + ' ₫';
+        }
+        document.querySelectorAll('.room-select, .style-select').forEach(function(select) {
+          select.addEventListener('change', function() {
+            const bookingId = this.getAttribute('data-booking-id');
+            const roomId = document.getElementById('roomId' + bookingId).value;
+            const styleId = document.getElementById('decorationStyleId' + bookingId).value;
+            let total = 0;
+            if (roomPrices[roomId]) total += roomPrices[roomId];
+            if (stylePrices[styleId]) total += stylePrices[styleId];
+            document.getElementById('totalPrice' + bookingId).textContent = formatCurrency(total);
+          });
         });
       });
     </script>
