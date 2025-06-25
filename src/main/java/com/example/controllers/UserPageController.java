@@ -2,6 +2,8 @@ package com.example.controllers;
 
 import java.util.Date;
 import java.util.List;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpSession;
 
@@ -118,7 +120,13 @@ public class UserPageController {
         Booking booking = bookingService.createBooking(user, room, timeSlot, decorationStyle, bookingDate);
         
         if (booking != null) {
-            // Set booking status to PENDING (waiting for payment)
+            // Tính tổng tiền: giá phòng + giá trang trí
+            double totalPrice = room.getPrice();
+            if (decorationStyle != null) {
+                totalPrice += decorationStyle.getPrice();
+            }
+            booking.setTotalPrice(totalPrice);
+            bookingService.saveBooking(booking);
             bookingService.updateBookingStatus(booking.getId(), "PENDING");
             // Redirect to payment page
             return "redirect:/user/payment/" + booking.getId();
@@ -156,5 +164,45 @@ public class UserPageController {
         bookingService.updateBookingStatus(bookingId, "CANCELLED_BY_USER");
         redirectAttributes.addFlashAttribute("successMessage", "Hủy đặt phòng thành công!");
         return "redirect:/user/bookings";
+    }
+    
+    @GetMapping("/select-timeslot")
+    public String selectTimeSlot(@RequestParam(required = false) Long roomId,
+                                 @RequestParam(required = false) String bookingDate,
+                                 Model model,
+                                 HttpSession session,
+                                 javax.servlet.http.HttpServletRequest request) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            if (roomId != null) session.setAttribute("pendingRoomId", roomId);
+            if (bookingDate != null) session.setAttribute("pendingBookingDate", bookingDate);
+            session.setAttribute("pendingRedirect", "/user/select-timeslot");
+            return "redirect:/login";
+        }
+        if (roomId == null && session.getAttribute("pendingRoomId") != null) {
+            roomId = (Long) session.getAttribute("pendingRoomId");
+            session.removeAttribute("pendingRoomId");
+        }
+        if ((bookingDate == null || bookingDate.isEmpty()) && session.getAttribute("pendingBookingDate") != null) {
+            bookingDate = (String) session.getAttribute("pendingBookingDate");
+            session.removeAttribute("pendingBookingDate");
+        }
+        if (session.getAttribute("pendingRedirect") != null) {
+            session.removeAttribute("pendingRedirect");
+        }
+        if (roomId == null) {
+            return "redirect:/rooms";
+        }
+        Room room = roomService.getRoomById(roomId);
+        if (room == null) {
+            return "redirect:/rooms";
+        }
+        List<TimeSlot> timeSlots = timeSlotService.getAllActiveTimeSlots();
+        java.time.LocalDate today = java.time.LocalDate.now();
+        model.addAttribute("room", room);
+        model.addAttribute("timeSlots", timeSlots);
+        model.addAttribute("bookingDate", bookingDate);
+        model.addAttribute("now", today.toString());
+        return "user/select-timeslot";
     }
 }

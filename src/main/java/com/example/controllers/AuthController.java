@@ -43,6 +43,7 @@ public class AuthController {
         
         if (user == null) {
             redirectAttributes.addFlashAttribute("error", "Số điện thoại hoặc mật khẩu không chính xác");
+            redirectAttributes.addFlashAttribute("redirectUrl", redirectUrl);
             return "redirect:/login";
         }
         

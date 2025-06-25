@@ -268,7 +268,7 @@
                 </c:if>
                 
                 <form action="${pageContext.request.contextPath}/login" method="post">
-                    <input type="hidden" name="redirectUrl" value="${redirectUrl}" />
+                    <input type="hidden" name="redirectUrl" value="${not empty redirectUrl ? redirectUrl : param.redirectUrl}" />
                     
                     <div class="form-group">
                         <label for="numberPhone" class="form-label">Số điện thoại</label>

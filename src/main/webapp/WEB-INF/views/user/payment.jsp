@@ -401,7 +401,12 @@
                 </div>
                 <div class="summary-item">
                     <span class="summary-label">Phong cách trang trí:</span>
-                    <span class="summary-value">${booking.decorationStyle.name}</span>
+                    <span class="summary-value">
+                        ${booking.decorationStyle.name}
+                        <c:if test="${not empty booking.decorationStyle}">
+                            (<fmt:formatNumber value="${booking.decorationStyle.price}" pattern="#,#00 ₫"/>)
+                        </c:if>
+                    </span>
                 </div>
                 <div class="summary-item">
                     <span class="summary-label">Giá phòng:</span>

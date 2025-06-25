@@ -128,7 +128,7 @@
           </div>
           <div class="table-responsive">
             <table class="table table-hover">
-              <thead>cd C:\Users\Lap\springmvc-hibernate-booking
+              <thead>
               <tr>
                 <th>ID</th>
                 <th>Người đặt</th>
