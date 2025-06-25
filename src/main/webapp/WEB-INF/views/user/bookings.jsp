@@ -107,7 +107,7 @@
         .nav-item a:hover {
             color: #1a237e;
         }
-        
+
         /* Mobile Navigation */
         .mobile-menu-toggle {
             display: none;
@@ -118,49 +118,49 @@
             cursor: pointer;
             padding: 10px;
         }
-        
+
         @media (max-width: 768px) {
             .mobile-menu-toggle {
                 display: block;
             }
-            
+
             .nav-links {
                 display: none;
                 flex-direction: column;
                 width: 100%;
             }
-            
+
             .nav-links.active {
                 display: flex;
             }
-            
+
             .nav-item {
                 margin: 0;
                 width: 100%;
             }
-            
+
             .nav-item a {
                 padding: 15px;
                 justify-content: flex-start;
             }
-            
+
             .nav-item.active::after {
                 display: none;
             }
-            
+
             .nav-item.active a {
                 background-color: rgba(26, 35, 126, 0.1);
             }
-            
+
             .top-header .container {
                 flex-direction: column;
                 text-align: center;
             }
-            
+
             .top-header .container > div {
                 margin-bottom: 10px;
             }
-            
+
             .main-nav .container {
                 display: flex;
                 justify-content: space-between;
@@ -587,616 +587,616 @@
     </style>
 </head>
 <body>
-    <header>
-      <div class="top-header">
+<header>
+    <div class="top-header">
         <div class="container">
-          <div style="display: flex; align-items: center;">
-            <div class="logo-text">
-              <h1>Cinema Booking</h1>
-              <span>Đặt phòng tiệc sinh nhật tại rạp chiếu phim</span>
-            </div>
-          </div>
-          <div>
-            <c:choose>
-              <c:when test="${empty sessionScope.user}">
-                <a href="${pageContext.request.contextPath}/login" class="auth-button">
-                  <i class="fas fa-user"></i> Đăng nhập
-                </a>
-                <a href="${pageContext.request.contextPath}/register" class="auth-button" style="margin-left: 10px;">
-                  <i class="fas fa-user-plus"></i> Đăng ký
-                </a>
-              </c:when>
-              <c:otherwise>
-                <span style="margin-right: 15px;">Xin chào, ${sessionScope.user.fullName}</span>
-                <a href="${pageContext.request.contextPath}/user/bookings" class="auth-button">
-                  <i class="fas fa-ticket-alt"></i> Đặt phòng của tôi
-                </a>
-                <a href="${pageContext.request.contextPath}/logout" class="auth-button" style="margin-left: 10px;">
-                  <i class="fas fa-sign-out-alt"></i> Đăng xuất
-                </a>
-              </c:otherwise>
-            </c:choose>
-          </div>
-        </div>
-      </div>
-      <nav class="main-nav">
-        <div class="container">
-          <button class="mobile-menu-toggle">
-            <i class="fas fa-bars"></i>
-          </button>
-          <ul class="nav-links">
-            <li class="nav-item">
-              <a href="${pageContext.request.contextPath}/">Trang chủ</a>
-            </li>
-            <li class="nav-item">
-              <a href="${pageContext.request.contextPath}/rooms">Phòng tiệc</a>
-            </li>
-            <li class="nav-item">
-              <a href="${pageContext.request.contextPath}/decoration-styles">Phong cách trang trí</a>
-            </li>
-            <li class="nav-item">
-              <a href="${pageContext.request.contextPath}/about">Về chúng tôi</a>
-            </li>
-            <li class="nav-item">
-              <a href="${pageContext.request.contextPath}/contact">Liên hệ</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </header>
-    
-    <main>
-        <section class="bookings-section">
-            <div class="container">
-                <h1 class="section-title">Lịch Sử Đặt Phòng</h1>
-                
-                <div class="bookings-container">
-                    <div class="booking-filters">
-                        <div class="search-box">
-                            <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên phòng..." class="search-input">
-                            <button class="search-btn"><i class="fas fa-search"></i></button>
-                        </div>
-                        
-                        <div class="filter-buttons">
-                            <a href="${pageContext.request.contextPath}/user/bookings?filter=all" class="filter-btn${param['filter'] == 'all' || empty param['filter'] ? ' active' : ''}">Tất cả</a>
-                            <a href="${pageContext.request.contextPath}/user/bookings?filter=PENDING" class="filter-btn${param['filter'] == 'PENDING' ? ' active' : ''}">Chờ xác nhận</a>
-                            <a href="${pageContext.request.contextPath}/user/bookings?filter=CONFIRMED" class="filter-btn${param['filter'] == 'CONFIRMED' ? ' active' : ''}">Đã xác nhận</a>
-                            <a href="${pageContext.request.contextPath}/user/bookings?filter=CANCELLED" class="filter-btn${param['filter'] == 'CANCELLED' ? ' active' : ''}">Đã hủy</a>
-                            <a href="${pageContext.request.contextPath}/user/bookings?filter=CANCELLED_BY_USER" class="filter-btn${param['filter'] == 'CANCELLED_BY_USER' ? ' active' : ''}">Đã hủy bởi bạn</a>
-                            <a href="${pageContext.request.contextPath}/user/bookings?filter=CANCELLED_BY_ADMIN" class="filter-btn${param['filter'] == 'CANCELLED_BY_ADMIN' ? ' active' : ''}">Đã hủy bởi quản trị viên</a>
-                        </div>
-                    </div>
-                    
-                    <div class="bookings-list">
-                        <c:choose>
-                            <c:when test="${empty bookings}">
-                                <div class="no-bookings">
-                                    <i class="fas fa-calendar-times"></i>
-                                    <p>Không có đơn đặt phòng nào.</p>
-                                </div>
-                            </c:when>
-                            <c:otherwise>
-                                <c:forEach items="${bookings}" var="booking">
-                                    <c:choose>
-                                        <c:when test="${param['filter'] eq 'CANCELLED' && (booking.status eq 'CANCELLED' || booking.status eq 'CANCELLED_BY_USER' || booking.status eq 'CANCELLED_BY_ADMIN')}">
-                                            <div class="booking-card" data-status="${booking.status}">
-                                                <div class="booking-header">
-                                                    <div class="booking-id">
-                                                        <span class="label">Mã đặt phòng:</span>
-                                                        <span class="value">#${booking.id}</span>
-                                                    </div>
-                                                    <div class="booking-status ${booking.status}">
-                                                        <c:choose>
-                                                            <c:when test="${booking.status eq 'PENDING'}">
-                                                                <i class="far fa-clock"></i> Chờ xác nhận
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CONFIRMED'}">
-                                                                <i class="fas fa-check-circle"></i> Đã xác nhận
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED_BY_USER'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy bởi bạn
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED_BY_ADMIN'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy bởi quản trị viên
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'REJECTED'}">
-                                                                <i class="fas fa-ban"></i> Đã từ chối
-                                                            </c:when>
-                                                        </c:choose>
-                                                    </div>
-                                                </div>
-                                                <div class="booking-body">
-                                                    <div class="booking-details">
-                                                        <div class="room-info">
-                                                            <h3 class="room-name booking-room-name"> Tên phòng: ${booking.room.roomName}</h3>
-                                                            <div class="time-slot">
-                                                                <i class="far fa-clock"></i>
-                                                                <span>Khung giờ: ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</span>
-                                                            </div>
-                                                            <div class="date-info">
-                                                                <i class="far fa-calendar-alt"></i>
-                                                                <span>Ngày nhận phòng: <fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></span>
-                                                            </div>
-                                                            <div class="decoration-style">
-                                                                <i class="fas fa-birthday-cake"></i>
-                                                                <span>Phong cách: ${booking.decorationStyle.name}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="booking-info">
-                                                        <div class="price">
-                                                            <div class="amount"><fmt:formatNumber value="${booking.totalPrice}" pattern="#.###" /> ₫</div>
-                                                            <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
-                                                        </div>
-                                                        <div class="booking-actions">
-                                                            <c:choose>
-                                                                <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
-                                                                    <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
-                                                                        <i class="fas fa-ban"></i> Hủy đặt phòng
-                                                                    </a>
-                                                                </c:when>
-                                                            </c:choose>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:when>
-                                        <c:when test="${param['filter'] eq 'CANCELLED_BY_USER' && booking.status eq 'CANCELLED_BY_USER'}">
-                                            <div class="booking-card" data-status="${booking.status}">
-                                                <div class="booking-header">
-                                                    <div class="booking-id">
-                                                        <span class="label">Mã đặt phòng:</span>
-                                                        <span class="value">#${booking.id}</span>
-                                                    </div>
-                                                    <div class="booking-status CANCELLED_BY_USER">
-                                                        <i class="fas fa-times-circle"></i> Đã hủy bởi bạn
-                                                    </div>
-                                                </div>
-                                                <div class="booking-body">
-                                                    <div class="booking-details">
-                                                        <div class="room-info">
-                                                            <h3 class="room-name"> Tên phòng: ${booking.room.roomName}</h3>
-                                                            <div class="time-slot">
-                                                                <i class="far fa-clock"></i>
-                                                                <span>Khung giờ: ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</span>
-                                                            </div>
-                                                            <div class="date-info">
-                                                                <i class="far fa-calendar-alt"></i>
-                                                                <span>Ngày nhận phòng: <fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></span>
-                                                            </div>
-                                                            <div class="decoration-style">
-                                                                <i class="fas fa-birthday-cake"></i>
-                                                                <span>Phong cách: ${booking.decorationStyle.name}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="booking-info">
-                                                        <div class="price">
-                                                            <div class="amount"><fmt:formatNumber value="${booking.totalPrice}" pattern="#.###" /> ₫</div>
-                                                            <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:when>
-                                        <c:when test="${param['filter'] eq 'CANCELLED_BY_ADMIN' && booking.status eq 'CANCELLED_BY_ADMIN'}">
-                                            <div class="booking-card" data-status="${booking.status}">
-                                                <div class="booking-header">
-                                                    <div class="booking-id">
-                                                        <span class="label">Mã đặt phòng:</span>
-                                                        <span class="value">#${booking.id}</span>
-                                                    </div>
-                                                    <div class="booking-status ${booking.status}">
-                                                        <c:choose>
-                                                            <c:when test="${booking.status eq 'PENDING'}">
-                                                                <i class="far fa-clock"></i> Chờ xác nhận
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CONFIRMED'}">
-                                                                <i class="fas fa-check-circle"></i> Đã xác nhận
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED_BY_USER'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy bởi bạn
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED_BY_ADMIN'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy bởi quản trị viên
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'REJECTED'}">
-                                                                <i class="fas fa-ban"></i> Đã từ chối
-                                                            </c:when>
-                                                        </c:choose>
-                                                    </div>
-                                                </div>
-                                                <div class="booking-body">
-                                                    <div class="booking-details">
-                                                        <div class="room-info">
-                                                            <h3 class="room-name booking-room-name"> Tên phòng: ${booking.room.roomName}</h3>
-                                                            <div class="time-slot">
-                                                                <i class="far fa-clock"></i>
-                                                                <span>Khung giờ: ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</span>
-                                                            </div>
-                                                            <div class="date-info">
-                                                                <i class="far fa-calendar-alt"></i>
-                                                                <span>Ngày nhận phòng: <fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></span>
-                                                            </div>
-                                                            <div class="decoration-style">
-                                                                <i class="fas fa-birthday-cake"></i>
-                                                                <span>Phong cách: ${booking.decorationStyle.name}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="booking-info">
-                                                        <div class="price">
-                                                            <div class="amount"><fmt:formatNumber value="${booking.totalPrice}" pattern="#.###" /> ₫</div>
-                                                            <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
-                                                        </div>
-                                                        <div class="booking-actions">
-                                                            <c:choose>
-                                                                <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
-                                                                    <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
-                                                                        <i class="fas fa-ban"></i> Hủy đặt phòng
-                                                                    </a>
-                                                                </c:when>
-                                                            </c:choose>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:when>
-                                        <c:when test="${param['filter'] eq 'PENDING' && booking.status eq 'PENDING'}">
-                                            <div class="booking-card" data-status="${booking.status}">
-                                                <div class="booking-header">
-                                                    <div class="booking-id">
-                                                        <span class="label">Mã đặt phòng:</span>
-                                                        <span class="value">#${booking.id}</span>
-                                                    </div>
-                                                    <div class="booking-status ${booking.status}">
-                                                        <c:choose>
-                                                            <c:when test="${booking.status eq 'PENDING'}">
-                                                                <i class="far fa-clock"></i> Chờ xác nhận
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CONFIRMED'}">
-                                                                <i class="fas fa-check-circle"></i> Đã xác nhận
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED_BY_USER'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy bởi bạn
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED_BY_ADMIN'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy bởi quản trị viên
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'REJECTED'}">
-                                                                <i class="fas fa-ban"></i> Đã từ chối
-                                                            </c:when>
-                                                        </c:choose>
-                                                    </div>
-                                                </div>
-                                                <div class="booking-body">
-                                                    <div class="booking-details">
-                                                        <div class="room-info">
-                                                            <h3 class="room-name booking-room-name"> Tên phòng: ${booking.room.roomName}</h3>
-                                                            <div class="time-slot">
-                                                                <i class="far fa-clock"></i>
-                                                                <span>Khung giờ: ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</span>
-                                                            </div>
-                                                            <div class="date-info">
-                                                                <i class="far fa-calendar-alt"></i>
-                                                                <span>Ngày nhận phòng: <fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></span>
-                                                            </div>
-                                                            <div class="decoration-style">
-                                                                <i class="fas fa-birthday-cake"></i>
-                                                                <span>Phong cách: ${booking.decorationStyle.name}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="booking-info">
-                                                        <div class="price">
-                                                            <div class="amount"><fmt:formatNumber value="${booking.totalPrice}" pattern="#.###" /> ₫</div>
-                                                            <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
-                                                        </div>
-                                                        <div class="booking-actions">
-                                                            <c:choose>
-                                                                <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
-                                                                    <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
-                                                                        <i class="fas fa-ban"></i> Hủy đặt phòng
-                                                                    </a>
-                                                                </c:when>
-                                                            </c:choose>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:when>
-                                        <c:when test="${param['filter'] eq 'CONFIRMED' && booking.status eq 'CONFIRMED'}">
-                                            <div class="booking-card" data-status="${booking.status}">
-                                                <div class="booking-header">
-                                                    <div class="booking-id">
-                                                        <span class="label">Mã đặt phòng:</span>
-                                                        <span class="value">#${booking.id}</span>
-                                                    </div>
-                                                    <div class="booking-status ${booking.status}">
-                                                        <c:choose>
-                                                            <c:when test="${booking.status eq 'PENDING'}">
-                                                                <i class="far fa-clock"></i> Chờ xác nhận
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CONFIRMED'}">
-                                                                <i class="fas fa-check-circle"></i> Đã xác nhận
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED_BY_USER'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy bởi bạn
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED_BY_ADMIN'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy bởi quản trị viên
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'REJECTED'}">
-                                                                <i class="fas fa-ban"></i> Đã từ chối
-                                                            </c:when>
-                                                        </c:choose>
-                                                    </div>
-                                                </div>
-                                                <div class="booking-body">
-                                                    <div class="booking-details">
-                                                        <div class="room-info">
-                                                            <h3 class="room-name booking-room-name"> Tên phòng: ${booking.room.roomName}</h3>
-                                                            <div class="time-slot">
-                                                                <i class="far fa-clock"></i>
-                                                                <span>Khung giờ: ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</span>
-                                                            </div>
-                                                            <div class="date-info">
-                                                                <i class="far fa-calendar-alt"></i>
-                                                                <span>Ngày nhận phòng: <fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></span>
-                                                            </div>
-                                                            <div class="decoration-style">
-                                                                <i class="fas fa-birthday-cake"></i>
-                                                                <span>Phong cách: ${booking.decorationStyle.name}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="booking-info">
-                                                        <div class="price">
-                                                            <div class="amount"><fmt:formatNumber value="${booking.totalPrice}" pattern="#.###" /> ₫</div>
-                                                            <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
-                                                        </div>
-                                                        <div class="booking-actions">
-                                                            <c:choose>
-                                                                <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
-                                                                    <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
-                                                                        <i class="fas fa-ban"></i> Hủy đặt phòng
-                                                                    </a>
-                                                                </c:when>
-                                                            </c:choose>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:when>
-                                        <c:when test="${param['filter'] eq 'all' || empty param['filter']}">
-                                            <div class="booking-card" data-status="${booking.status}">
-                                                <div class="booking-header">
-                                                    <div class="booking-id">
-                                                        <span class="label">Mã đặt phòng:</span>
-                                                        <span class="value">#${booking.id}</span>
-                                                    </div>
-                                                    <div class="booking-status ${booking.status}">
-                                                        <c:choose>
-                                                            <c:when test="${booking.status eq 'PENDING'}">
-                                                                <i class="far fa-clock"></i> Chờ xác nhận
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CONFIRMED'}">
-                                                                <i class="fas fa-check-circle"></i> Đã xác nhận
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED_BY_USER'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy bởi bạn
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'CANCELLED_BY_ADMIN'}">
-                                                                <i class="fas fa-times-circle"></i> Đã hủy bởi quản trị viên
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'REJECTED'}">
-                                                                <i class="fas fa-ban"></i> Đã từ chối
-                                                            </c:when>
-                                                        </c:choose>
-                                                    </div>
-                                                </div>
-                                                <div class="booking-body">
-                                                    <div class="booking-details">
-                                                        <div class="room-info">
-                                                            <h3 class="room-name booking-room-name"> Tên phòng: ${booking.room.roomName}</h3>
-                                                            <div class="time-slot">
-                                                                <i class="far fa-clock"></i>
-                                                                <span>Khung giờ: ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</span>
-                                                            </div>
-                                                            <div class="date-info">
-                                                                <i class="far fa-calendar-alt"></i>
-                                                                <span>Ngày nhận phòng: <fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></span>
-                                                            </div>
-                                                            <div class="decoration-style">
-                                                                <i class="fas fa-birthday-cake"></i>
-                                                                <span>Phong cách: ${booking.decorationStyle.name}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="booking-info">
-                                                        <div class="price">
-                                                            <div class="amount"><fmt:formatNumber value="${booking.totalPrice}" pattern="#.###" /> ₫</div>
-                                                            <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
-                                                        </div>
-                                                        <div class="booking-actions">
-                                                            <c:choose>
-                                                                <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
-                                                                    <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
-                                                                        <i class="fas fa-ban"></i> Hủy đặt phòng
-                                                                    </a>
-                                                                </c:when>
-                                                            </c:choose>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:when>
-                                    </c:choose>
-                                </c:forEach>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
+            <div style="display: flex; align-items: center;">
+                <div class="logo-text">
+                    <h1>Cinema Booking</h1>
+                    <span>Đặt phòng tiệc sinh nhật tại rạp chiếu phim</span>
                 </div>
             </div>
-        </section>
-    </main>
-    
-    <footer>
-      <div class="container">
-        <div class="footer-content">
-          <div class="footer-column">
-            <h3>Cinema Booking</h3>
-            <p>
-              Dịch vụ đặt phòng tiệc sinh nhật tại rạp chiếu phim, mang đến trải nghiệm độc đáo và khó quên cho bạn và người thân.
-            </p>
-            <div class="social-links">
-              <a href="#"><i class="fab fa-facebook-f"></i></a>
-              <a href="#"><i class="fab fa-twitter"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-              <a href="#"><i class="fab fa-youtube"></i></a>
+            <div>
+                <c:choose>
+                    <c:when test="${empty sessionScope.user}">
+                        <a href="${pageContext.request.contextPath}/login" class="auth-button">
+                            <i class="fas fa-user"></i> Đăng nhập
+                        </a>
+                        <a href="${pageContext.request.contextPath}/register" class="auth-button" style="margin-left: 10px;">
+                            <i class="fas fa-user-plus"></i> Đăng ký
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <span style="margin-right: 15px;">Xin chào, ${sessionScope.user.fullName}</span>
+                        <a href="${pageContext.request.contextPath}/user/bookings" class="auth-button">
+                            <i class="fas fa-ticket-alt"></i> Đặt phòng của tôi
+                        </a>
+                        <a href="${pageContext.request.contextPath}/logout" class="auth-button" style="margin-left: 10px;">
+                            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                        </a>
+                    </c:otherwise>
+                </c:choose>
             </div>
-          </div>
-          <div class="footer-column">
-            <h3>Liên kết nhanh</h3>
-            <ul class="footer-links">
-              <li><a href="${pageContext.request.contextPath}/">Trang chủ</a></li>
-              <li><a href="${pageContext.request.contextPath}/rooms">Phòng tiệc</a></li>
-              <li><a href="${pageContext.request.contextPath}/decoration-styles">Phong cách trang trí</a></li>
-              <li><a href="${pageContext.request.contextPath}/about">Về chúng tôi</a></li>
-              <li><a href="${pageContext.request.contextPath}/contact">Liên hệ</a></li>
+        </div>
+    </div>
+    <nav class="main-nav">
+        <div class="container">
+            <button class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/">Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/rooms">Phòng tiệc</a>
+                </li>
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/decoration-styles">Phong cách trang trí</a>
+                </li>
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/about">Về chúng tôi</a>
+                </li>
+                <li class="nav-item">
+                    <a href="${pageContext.request.contextPath}/contact">Liên hệ</a>
+                </li>
             </ul>
-          </div>
-          <div class="footer-column contact-info">
-            <h3>Thông tin liên hệ</h3>
-            <p><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Văn Linh, Quận 7, TP. HCM</p>
-            <p><i class="fas fa-phone"></i> (028) 1234 5678</p>
-            <p><i class="fas fa-envelope"></i> info@cinemabooking.com</p>
-            <p><i class="fas fa-clock"></i> 08:00 - 22:00, Thứ 2 - Chủ nhật</p>
-          </div>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section class="bookings-section">
+        <div class="container">
+            <h1 class="section-title">Lịch Sử Đặt Phòng</h1>
+
+            <div class="bookings-container">
+                <div class="booking-filters">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Tìm kiếm theo tên phòng..." class="search-input">
+                        <button class="search-btn"><i class="fas fa-search"></i></button>
+                    </div>
+
+                    <div class="filter-buttons">
+                        <a href="${pageContext.request.contextPath}/user/bookings?filter=all" class="filter-btn${param['filter'] == 'all' || empty param['filter'] ? ' active' : ''}">Tất cả</a>
+                        <a href="${pageContext.request.contextPath}/user/bookings?filter=PENDING" class="filter-btn${param['filter'] == 'PENDING' ? ' active' : ''}">Chờ xác nhận</a>
+                        <a href="${pageContext.request.contextPath}/user/bookings?filter=CONFIRMED" class="filter-btn${param['filter'] == 'CONFIRMED' ? ' active' : ''}">Đã xác nhận</a>
+                        <a href="${pageContext.request.contextPath}/user/bookings?filter=CANCELLED" class="filter-btn${param['filter'] == 'CANCELLED' ? ' active' : ''}">Đã hủy</a>
+                        <a href="${pageContext.request.contextPath}/user/bookings?filter=CANCELLED_BY_USER" class="filter-btn${param['filter'] == 'CANCELLED_BY_USER' ? ' active' : ''}">Đã hủy bởi bạn</a>
+                        <a href="${pageContext.request.contextPath}/user/bookings?filter=CANCELLED_BY_ADMIN" class="filter-btn${param['filter'] == 'CANCELLED_BY_ADMIN' ? ' active' : ''}">Đã hủy bởi quản trị viên</a>
+                    </div>
+                </div>
+
+                <div class="bookings-list">
+                    <c:choose>
+                        <c:when test="${empty bookings}">
+                            <div class="no-bookings">
+                                <i class="fas fa-calendar-times"></i>
+                                <p>Không có đơn đặt phòng nào.</p>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach items="${bookings}" var="booking">
+                                <c:choose>
+                                    <c:when test="${param['filter'] eq 'CANCELLED' && (booking.status eq 'CANCELLED' || booking.status eq 'CANCELLED_BY_USER' || booking.status eq 'CANCELLED_BY_ADMIN')}">
+                                        <div class="booking-card" data-status="${booking.status}">
+                                            <div class="booking-header">
+                                                <div class="booking-id">
+                                                    <span class="label">Mã đặt phòng:</span>
+                                                    <span class="value">#${booking.id}</span>
+                                                </div>
+                                                <div class="booking-status ${booking.status}">
+                                                    <c:choose>
+                                                        <c:when test="${booking.status eq 'PENDING'}">
+                                                            <i class="far fa-clock"></i> Chờ xác nhận
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CONFIRMED'}">
+                                                            <i class="fas fa-check-circle"></i> Đã xác nhận
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED_BY_USER'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy bởi bạn
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED_BY_ADMIN'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy bởi quản trị viên
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'REJECTED'}">
+                                                            <i class="fas fa-ban"></i> Đã từ chối
+                                                        </c:when>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                            <div class="booking-body">
+                                                <div class="booking-details">
+                                                    <div class="room-info">
+                                                        <h3 class="room-name booking-room-name"> Tên phòng: ${booking.room.roomName}</h3>
+                                                        <div class="time-slot">
+                                                            <i class="far fa-clock"></i>
+                                                            <span>Khung giờ: ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</span>
+                                                        </div>
+                                                        <div class="date-info">
+                                                            <i class="far fa-calendar-alt"></i>
+                                                            <span>Ngày nhận phòng: <fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></span>
+                                                        </div>
+                                                        <div class="decoration-style">
+                                                            <i class="fas fa-birthday-cake"></i>
+                                                            <span>Phong cách: ${booking.decorationStyle.name}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="booking-info">
+                                                    <div class="price">
+                                                        <div class="amount"><fmt:formatNumber value="${booking.totalPrice}" pattern="#.###" /> ₫</div>
+                                                        <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
+                                                    </div>
+                                                    <div class="booking-actions">
+                                                        <c:choose>
+                                                            <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
+                                                                <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
+                                                                    <i class="fas fa-ban"></i> Hủy đặt phòng
+                                                                </a>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:when>
+                                    <c:when test="${param['filter'] eq 'CANCELLED_BY_USER' && booking.status eq 'CANCELLED_BY_USER'}">
+                                        <div class="booking-card" data-status="${booking.status}">
+                                            <div class="booking-header">
+                                                <div class="booking-id">
+                                                    <span class="label">Mã đặt phòng:</span>
+                                                    <span class="value">#${booking.id}</span>
+                                                </div>
+                                                <div class="booking-status CANCELLED_BY_USER">
+                                                    <i class="fas fa-times-circle"></i> Đã hủy bởi bạn
+                                                </div>
+                                            </div>
+                                            <div class="booking-body">
+                                                <div class="booking-details">
+                                                    <div class="room-info">
+                                                        <h3 class="room-name"> Tên phòng: ${booking.room.roomName}</h3>
+                                                        <div class="time-slot">
+                                                            <i class="far fa-clock"></i>
+                                                            <span>Khung giờ: ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</span>
+                                                        </div>
+                                                        <div class="date-info">
+                                                            <i class="far fa-calendar-alt"></i>
+                                                            <span>Ngày nhận phòng: <fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></span>
+                                                        </div>
+                                                        <div class="decoration-style">
+                                                            <i class="fas fa-birthday-cake"></i>
+                                                            <span>Phong cách: ${booking.decorationStyle.name}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="booking-info">
+                                                    <div class="price">
+                                                        <div class="amount"><fmt:formatNumber value="${booking.totalPrice}" pattern="#.###" /> ₫</div>
+                                                        <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:when>
+                                    <c:when test="${param['filter'] eq 'CANCELLED_BY_ADMIN' && booking.status eq 'CANCELLED_BY_ADMIN'}">
+                                        <div class="booking-card" data-status="${booking.status}">
+                                            <div class="booking-header">
+                                                <div class="booking-id">
+                                                    <span class="label">Mã đặt phòng:</span>
+                                                    <span class="value">#${booking.id}</span>
+                                                </div>
+                                                <div class="booking-status ${booking.status}">
+                                                    <c:choose>
+                                                        <c:when test="${booking.status eq 'PENDING'}">
+                                                            <i class="far fa-clock"></i> Chờ xác nhận
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CONFIRMED'}">
+                                                            <i class="fas fa-check-circle"></i> Đã xác nhận
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED_BY_USER'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy bởi bạn
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED_BY_ADMIN'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy bởi quản trị viên
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'REJECTED'}">
+                                                            <i class="fas fa-ban"></i> Đã từ chối
+                                                        </c:when>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                            <div class="booking-body">
+                                                <div class="booking-details">
+                                                    <div class="room-info">
+                                                        <h3 class="room-name booking-room-name"> Tên phòng: ${booking.room.roomName}</h3>
+                                                        <div class="time-slot">
+                                                            <i class="far fa-clock"></i>
+                                                            <span>Khung giờ: ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</span>
+                                                        </div>
+                                                        <div class="date-info">
+                                                            <i class="far fa-calendar-alt"></i>
+                                                            <span>Ngày nhận phòng: <fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></span>
+                                                        </div>
+                                                        <div class="decoration-style">
+                                                            <i class="fas fa-birthday-cake"></i>
+                                                            <span>Phong cách: ${booking.decorationStyle.name}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="booking-info">
+                                                    <div class="price">
+                                                        <div class="amount"><fmt:formatNumber value="${booking.totalPrice}" pattern="#.###" /> ₫</div>
+                                                        <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
+                                                    </div>
+                                                    <div class="booking-actions">
+                                                        <c:choose>
+                                                            <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
+                                                                <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
+                                                                    <i class="fas fa-ban"></i> Hủy đặt phòng
+                                                                </a>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:when>
+                                    <c:when test="${param['filter'] eq 'PENDING' && booking.status eq 'PENDING'}">
+                                        <div class="booking-card" data-status="${booking.status}">
+                                            <div class="booking-header">
+                                                <div class="booking-id">
+                                                    <span class="label">Mã đặt phòng:</span>
+                                                    <span class="value">#${booking.id}</span>
+                                                </div>
+                                                <div class="booking-status ${booking.status}">
+                                                    <c:choose>
+                                                        <c:when test="${booking.status eq 'PENDING'}">
+                                                            <i class="far fa-clock"></i> Chờ xác nhận
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CONFIRMED'}">
+                                                            <i class="fas fa-check-circle"></i> Đã xác nhận
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED_BY_USER'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy bởi bạn
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED_BY_ADMIN'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy bởi quản trị viên
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'REJECTED'}">
+                                                            <i class="fas fa-ban"></i> Đã từ chối
+                                                        </c:when>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                            <div class="booking-body">
+                                                <div class="booking-details">
+                                                    <div class="room-info">
+                                                        <h3 class="room-name booking-room-name"> Tên phòng: ${booking.room.roomName}</h3>
+                                                        <div class="time-slot">
+                                                            <i class="far fa-clock"></i>
+                                                            <span>Khung giờ: ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</span>
+                                                        </div>
+                                                        <div class="date-info">
+                                                            <i class="far fa-calendar-alt"></i>
+                                                            <span>Ngày nhận phòng: <fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></span>
+                                                        </div>
+                                                        <div class="decoration-style">
+                                                            <i class="fas fa-birthday-cake"></i>
+                                                            <span>Phong cách: ${booking.decorationStyle.name}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="booking-info">
+                                                    <div class="price">
+                                                        <div class="amount"><fmt:formatNumber value="${booking.totalPrice}" pattern="#.###" /> ₫</div>
+                                                        <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
+                                                    </div>
+                                                    <div class="booking-actions">
+                                                        <c:choose>
+                                                            <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
+                                                                <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
+                                                                    <i class="fas fa-ban"></i> Hủy đặt phòng
+                                                                </a>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:when>
+                                    <c:when test="${param['filter'] eq 'CONFIRMED' && booking.status eq 'CONFIRMED'}">
+                                        <div class="booking-card" data-status="${booking.status}">
+                                            <div class="booking-header">
+                                                <div class="booking-id">
+                                                    <span class="label">Mã đặt phòng:</span>
+                                                    <span class="value">#${booking.id}</span>
+                                                </div>
+                                                <div class="booking-status ${booking.status}">
+                                                    <c:choose>
+                                                        <c:when test="${booking.status eq 'PENDING'}">
+                                                            <i class="far fa-clock"></i> Chờ xác nhận
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CONFIRMED'}">
+                                                            <i class="fas fa-check-circle"></i> Đã xác nhận
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED_BY_USER'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy bởi bạn
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED_BY_ADMIN'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy bởi quản trị viên
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'REJECTED'}">
+                                                            <i class="fas fa-ban"></i> Đã từ chối
+                                                        </c:when>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                            <div class="booking-body">
+                                                <div class="booking-details">
+                                                    <div class="room-info">
+                                                        <h3 class="room-name booking-room-name"> Tên phòng: ${booking.room.roomName}</h3>
+                                                        <div class="time-slot">
+                                                            <i class="far fa-clock"></i>
+                                                            <span>Khung giờ: ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</span>
+                                                        </div>
+                                                        <div class="date-info">
+                                                            <i class="far fa-calendar-alt"></i>
+                                                            <span>Ngày nhận phòng: <fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></span>
+                                                        </div>
+                                                        <div class="decoration-style">
+                                                            <i class="fas fa-birthday-cake"></i>
+                                                            <span>Phong cách: ${booking.decorationStyle.name}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="booking-info">
+                                                    <div class="price">
+                                                        <div class="amount"><fmt:formatNumber value="${booking.totalPrice}" pattern="#.###" /> ₫</div>
+                                                        <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
+                                                    </div>
+                                                    <div class="booking-actions">
+                                                        <c:choose>
+                                                            <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
+                                                                <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
+                                                                    <i class="fas fa-ban"></i> Hủy đặt phòng
+                                                                </a>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:when>
+                                    <c:when test="${param['filter'] eq 'all' || empty param['filter']}">
+                                        <div class="booking-card" data-status="${booking.status}">
+                                            <div class="booking-header">
+                                                <div class="booking-id">
+                                                    <span class="label">Mã đặt phòng:</span>
+                                                    <span class="value">#${booking.id}</span>
+                                                </div>
+                                                <div class="booking-status ${booking.status}">
+                                                    <c:choose>
+                                                        <c:when test="${booking.status eq 'PENDING'}">
+                                                            <i class="far fa-clock"></i> Chờ xác nhận
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CONFIRMED'}">
+                                                            <i class="fas fa-check-circle"></i> Đã xác nhận
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED_BY_USER'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy bởi bạn
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'CANCELLED_BY_ADMIN'}">
+                                                            <i class="fas fa-times-circle"></i> Đã hủy bởi quản trị viên
+                                                        </c:when>
+                                                        <c:when test="${booking.status eq 'REJECTED'}">
+                                                            <i class="fas fa-ban"></i> Đã từ chối
+                                                        </c:when>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                            <div class="booking-body">
+                                                <div class="booking-details">
+                                                    <div class="room-info">
+                                                        <h3 class="room-name booking-room-name"> Tên phòng: ${booking.room.roomName}</h3>
+                                                        <div class="time-slot">
+                                                            <i class="far fa-clock"></i>
+                                                            <span>Khung giờ: ${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</span>
+                                                        </div>
+                                                        <div class="date-info">
+                                                            <i class="far fa-calendar-alt"></i>
+                                                            <span>Ngày nhận phòng: <fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></span>
+                                                        </div>
+                                                        <div class="decoration-style">
+                                                            <i class="fas fa-birthday-cake"></i>
+                                                            <span>Phong cách: ${booking.decorationStyle.name}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="booking-info">
+                                                    <div class="price">
+                                                        <div class="amount"><fmt:formatNumber value="${booking.totalPrice}" pattern="#.###" /> ₫</div>
+                                                        <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
+                                                    </div>
+                                                    <div class="booking-actions">
+                                                        <c:choose>
+                                                            <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
+                                                                <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
+                                                                    <i class="fas fa-ban"></i> Hủy đặt phòng
+                                                                </a>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:when>
+                                </c:choose>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Cinema Booking</h3>
+                <p>
+                    Dịch vụ đặt phòng tiệc sinh nhật tại rạp chiếu phim, mang đến trải nghiệm độc đáo và khó quên cho bạn và người thân.
+                </p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Liên kết nhanh</h3>
+                <ul class="footer-links">
+                    <li><a href="${pageContext.request.contextPath}/">Trang chủ</a></li>
+                    <li><a href="${pageContext.request.contextPath}/rooms">Phòng tiệc</a></li>
+                    <li><a href="${pageContext.request.contextPath}/decoration-styles">Phong cách trang trí</a></li>
+                    <li><a href="${pageContext.request.contextPath}/about">Về chúng tôi</a></li>
+                    <li><a href="${pageContext.request.contextPath}/contact">Liên hệ</a></li>
+                </ul>
+            </div>
+            <div class="footer-column contact-info">
+                <h3>Thông tin liên hệ</h3>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Văn Linh, Quận 7, TP. HCM</p>
+                <p><i class="fas fa-phone"></i> (028) 1234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@cinemabooking.com</p>
+                <p><i class="fas fa-clock"></i> 08:00 - 22:00, Thứ 2 - Chủ nhật</p>
+            </div>
         </div>
         <div class="copyright">
-          <p>&copy; 2023 Cinema Booking. All Rights Reserved.</p>
+            <p>&copy; 2023 Cinema Booking. All Rights Reserved.</p>
         </div>
-      </div>
-    </footer>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Filter buttons functionality
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const bookingCards = document.querySelectorAll('.booking-card');
-            
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all buttons
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Add active class to clicked button
-                    this.classList.add('active');
-                    
-                    // Get filter value
-                    const filterValue = this.getAttribute('data-filter');
-                    
-                    // Filter booking cards
-                    bookingCards.forEach(card => {
-                        if (filterValue === 'all' || card.getAttribute('data-status') === filterValue) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            });
-            
-            // Search functionality
-            const searchInput = document.getElementById('searchInput');
-            
-            searchInput.addEventListener('input', function() {
-                const searchValue = this.value.toLowerCase();
-                
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filter buttons functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const bookingCards = document.querySelectorAll('.booking-card');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+
+                // Add active class to clicked button
+                this.classList.add('active');
+
+                // Get filter value
+                const filterValue = this.getAttribute('data-filter');
+
+                // Filter booking cards
                 bookingCards.forEach(card => {
-                    const roomName = card.querySelector('.booking-room-name').textContent.toLowerCase();
-                    
-                    if (roomName.includes(searchValue)) {
+                    if (filterValue === 'all' || card.getAttribute('data-status') === filterValue) {
                         card.style.display = 'block';
                     } else {
                         card.style.display = 'none';
                     }
                 });
             });
-            
-            // Mobile menu toggle functionality
-            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-            const navLinks = document.querySelector('.nav-links');
-            
-            mobileMenuToggle.addEventListener('click', function() {
-                navLinks.classList.toggle('active');
-                const icon = mobileMenuToggle.querySelector('i');
-                if (navLinks.classList.contains('active')) {
-                    icon.classList.remove('fa-bars');
-                    icon.classList.add('fa-times');
-                } else {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
-            });
-
-            function showNoBookingMessage() {
-                // Xóa thông báo cũ
-                document.querySelectorAll('.no-bookings.dynamic').forEach(e => e.remove());
-                // Lấy trạng thái đang lọc
-                const activeBtn = document.querySelector('.filter-btn.active');
-                if (!activeBtn) return;
-                const filter = activeBtn.getAttribute('data-filter');
-                // Đếm số booking hiển thị
-                const visible = Array.from(document.querySelectorAll('.booking-card'))
-                  .filter(card => card.style.display !== 'none');
-                if (visible.length === 0) {
-                  let msgText = '';
-                  switch (filter) {
-                    case 'PENDING':
-                      msgText = 'Không có đơn đặt phòng nào chờ xác nhận.'; break;
-                    case 'CONFIRMED':
-                      msgText = 'Không có đơn đặt phòng nào đã xác nhận.'; break;
-                    case 'CANCELLED':
-                      msgText = 'Không có đơn đặt phòng nào đã hủy.'; break;
-                    case 'CANCELLED_BY_USER':
-                      msgText = 'Không có đơn đặt phòng nào đã hủy bởi bạn.'; break;
-                    case 'CANCELLED_BY_ADMIN':
-                      msgText = 'Không có đơn đặt phòng nào đã hủy bởi quản trị viên.'; break;
-                    default:
-                      msgText = 'Không có đơn đặt phòng nào.';
-                  }
-                  const msg = document.createElement('div');
-                  msg.className = 'no-bookings dynamic';
-                  msg.innerHTML = `<i class="fas fa-calendar-times" style="font-size:48px"></i><p>${msgText}</p>`;
-                  document.querySelector('.bookings-list').appendChild(msg);
-                }
-            }
-            // Gọi lại hàm này mỗi khi filter thay đổi
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    setTimeout(showNoBookingMessage, 100); // Đợi filter chạy xong
-                });
-            });
-            // Gọi khi load trang
-            showNoBookingMessage();
         });
-    </script>
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+
+        searchInput.addEventListener('input', function() {
+            const searchValue = this.value.toLowerCase();
+
+            bookingCards.forEach(card => {
+                const roomName = card.querySelector('.booking-room-name').textContent.toLowerCase();
+
+                if (roomName.includes(searchValue)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Mobile menu toggle functionality
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuToggle.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            const icon = mobileMenuToggle.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        function showNoBookingMessage() {
+            // Xóa thông báo cũ
+            document.querySelectorAll('.no-bookings.dynamic').forEach(e => e.remove());
+            // Lấy trạng thái đang lọc
+            const activeBtn = document.querySelector('.filter-btn.active');
+            if (!activeBtn) return;
+            const filter = activeBtn.getAttribute('data-filter');
+            // Đếm số booking hiển thị
+            const visible = Array.from(document.querySelectorAll('.booking-card'))
+                .filter(card => card.style.display !== 'none');
+            if (visible.length === 0) {
+                let msgText = '';
+                switch (filter) {
+                    case 'PENDING':
+                        msgText = 'Không có đơn đặt phòng nào chờ xác nhận.'; break;
+                    case 'CONFIRMED':
+                        msgText = 'Không có đơn đặt phòng nào đã xác nhận.'; break;
+                    case 'CANCELLED':
+                        msgText = 'Không có đơn đặt phòng nào đã hủy.'; break;
+                    case 'CANCELLED_BY_USER':
+                        msgText = 'Không có đơn đặt phòng nào đã hủy bởi bạn.'; break;
+                    case 'CANCELLED_BY_ADMIN':
+                        msgText = 'Không có đơn đặt phòng nào đã hủy bởi quản trị viên.'; break;
+                    default:
+                        msgText = 'Không có đơn đặt phòng nào.';
+                }
+                const msg = document.createElement('div');
+                msg.className = 'no-bookings dynamic';
+                msg.innerHTML = `<i class="fas fa-calendar-times" style="font-size:48px"></i><p>${msgText}</p>`;
+                document.querySelector('.bookings-list').appendChild(msg);
+            }
+        }
+        // Gọi lại hàm này mỗi khi filter thay đổi
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                setTimeout(showNoBookingMessage, 100); // Đợi filter chạy xong
+            });
+        });
+        // Gọi khi load trang
+        showNoBookingMessage();
+    });
+</script>
 </body>
 </html> 

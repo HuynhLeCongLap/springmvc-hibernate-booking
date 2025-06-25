@@ -16,7 +16,7 @@
             --light-color: #ffffff;
             --border-color: #d1d5db;
         }
-        
+
         body {
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--secondary-color);
@@ -31,7 +31,7 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .page-overlay {
             background-color: rgba(0, 0, 0, 0.7);
             width: 100%;
@@ -40,7 +40,7 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .access-denied-container {
             max-width: 550px;
             margin: 0 auto;
@@ -52,7 +52,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .access-denied-container::before {
             content: '';
             position: absolute;
@@ -62,26 +62,26 @@
             height: 5px;
             background: linear-gradient(to right, var(--primary-color), var(--accent-color));
         }
-        
+
         .access-denied-icon {
             font-size: 80px;
             color: var(--accent-color);
             margin-bottom: 20px;
         }
-        
+
         .access-denied-title {
             color: var(--primary-color);
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 15px;
         }
-        
+
         .access-denied-message {
             font-size: 16px;
             color: #666;
             margin-bottom: 30px;
         }
-        
+
         .back-btn {
             display: inline-block;
             padding: 12px 25px;
@@ -97,12 +97,12 @@
             transition: background-color 0.3s;
             margin-right: 10px;
         }
-        
+
         .back-btn:hover {
             background-color: #0e1561;
             color: white;
         }
-        
+
         .login-btn {
             display: inline-block;
             padding: 12px 25px;
@@ -117,7 +117,7 @@
             text-decoration: none;
             transition: background-color 0.3s;
         }
-        
+
         .login-btn:hover {
             background-color: #c2185b;
             color: white;
@@ -125,25 +125,25 @@
     </style>
 </head>
 <body>
-    <div class="page-overlay">
-        <div class="access-denied-container">
-            <div class="access-denied-icon">
-                <i class="bi bi-slash-circle"></i>
-            </div>
-            <h1 class="access-denied-title">Truy cập bị từ chối</h1>
-            <p class="access-denied-message">
-                Rất tiếc, bạn không có quyền truy cập vào trang này. 
-                Vui lòng đăng nhập với tài khoản có quyền phù hợp hoặc quay lại trang chủ.
-            </p>
-            <div>
-                <a href="${pageContext.request.contextPath}/" class="back-btn">
-                    <i class="bi bi-house-door"></i> Trang chủ
-                </a>
-                <a href="${pageContext.request.contextPath}/login" class="login-btn">
-                    <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
-                </a>
-            </div>
+<div class="page-overlay">
+    <div class="access-denied-container">
+        <div class="access-denied-icon">
+            <i class="bi bi-slash-circle"></i>
+        </div>
+        <h1 class="access-denied-title">Truy cập bị từ chối</h1>
+        <p class="access-denied-message">
+            Rất tiếc, bạn không có quyền truy cập vào trang này.
+            Vui lòng đăng nhập với tài khoản có quyền phù hợp hoặc quay lại trang chủ.
+        </p>
+        <div>
+            <a href="${pageContext.request.contextPath}/" class="back-btn">
+                <i class="bi bi-house-door"></i> Trang chủ
+            </a>
+            <a href="${pageContext.request.contextPath}/login" class="login-btn">
+                <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+            </a>
         </div>
     </div>
+</div>
 </body>
 </html>

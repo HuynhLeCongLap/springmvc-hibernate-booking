@@ -138,6 +138,12 @@ Hệ thống đặt phòng chiếu phim mini, được xây dựng với Spring 
   - Số điện thoại: 0981793201
   - Mật khẩu: a
 
+  - Số điện thoại: 0764806087
+  - Mật khẩu: a
+
 - **Người dùng**:
   - Số điện thoại: 0000000000
   - Mật khẩu: 0
+
+  - Số điện thoại: admin
+  - Mật khẩu: 1
