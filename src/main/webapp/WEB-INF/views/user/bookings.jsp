@@ -732,13 +732,11 @@
                                                         <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
                                                     </div>
                                                     <div class="booking-actions">
-                                                        <c:choose>
-                                                            <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
-                                                                <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
-                                                                    <i class="fas fa-ban"></i> Hủy đặt phòng
-                                                                </a>
-                                                            </c:when>
-                                                        </c:choose>
+                                                        <c:if test="${booking.canCancel}">
+                                                            <button class="btn-cancel" onclick="confirmCancel('${booking.id}')">
+                                                                <i class="fas fa-ban"></i> Hủy đặt phòng
+                                                            </button>
+                                                        </c:if>
                                                     </div>
                                                 </div>
                                             </div>
@@ -836,13 +834,11 @@
                                                         <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
                                                     </div>
                                                     <div class="booking-actions">
-                                                        <c:choose>
-                                                            <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
-                                                                <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
-                                                                    <i class="fas fa-ban"></i> Hủy đặt phòng
-                                                                </a>
-                                                            </c:when>
-                                                        </c:choose>
+                                                        <c:if test="${booking.canCancel}">
+                                                            <button class="btn-cancel" onclick="confirmCancel('${booking.id}')">
+                                                                <i class="fas fa-ban"></i> Hủy đặt phòng
+                                                            </button>
+                                                        </c:if>
                                                     </div>
                                                 </div>
                                             </div>
@@ -902,13 +898,11 @@
                                                         <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
                                                     </div>
                                                     <div class="booking-actions">
-                                                        <c:choose>
-                                                            <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
-                                                                <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
-                                                                    <i class="fas fa-ban"></i> Hủy đặt phòng
-                                                                </a>
-                                                            </c:when>
-                                                        </c:choose>
+                                                        <c:if test="${booking.canCancel}">
+                                                            <button class="btn-cancel" onclick="confirmCancel('${booking.id}')">
+                                                                <i class="fas fa-ban"></i> Hủy đặt phòng
+                                                            </button>
+                                                        </c:if>
                                                     </div>
                                                 </div>
                                             </div>
@@ -968,13 +962,11 @@
                                                         <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
                                                     </div>
                                                     <div class="booking-actions">
-                                                        <c:choose>
-                                                            <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
-                                                                <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
-                                                                    <i class="fas fa-ban"></i> Hủy đặt phòng
-                                                                </a>
-                                                            </c:when>
-                                                        </c:choose>
+                                                        <c:if test="${booking.canCancel}">
+                                                            <button class="btn-cancel" onclick="confirmCancel('${booking.id}')">
+                                                                <i class="fas fa-ban"></i> Hủy đặt phòng
+                                                            </button>
+                                                        </c:if>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1034,13 +1026,11 @@
                                                         <div class="date">Đặt ngày: <fmt:formatDate value="${booking.bookingDate}" pattern="dd/MM/yyyy" /></div>
                                                     </div>
                                                     <div class="booking-actions">
-                                                        <c:choose>
-                                                            <c:when test="${(booking.status eq 'PENDING' || booking.status eq 'CONFIRMED') && booking.paymentInfo == null}">
-                                                                <a href="${pageContext.request.contextPath}/user/cancel-booking/${booking.id}" class="btn-cancel">
-                                                                    <i class="fas fa-ban"></i> Hủy đặt phòng
-                                                                </a>
-                                                            </c:when>
-                                                        </c:choose>
+                                                        <c:if test="${booking.canCancel}">
+                                                            <button class="btn-cancel" onclick="confirmCancel('${booking.id}')">
+                                                                <i class="fas fa-ban"></i> Hủy đặt phòng
+                                                            </button>
+                                                        </c:if>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1197,6 +1187,12 @@
         // Gọi khi load trang
         showNoBookingMessage();
     });
+
+    function confirmCancel(bookingId) {
+        if (confirm('Bạn có chắc chắn muốn hủy đơn đặt phòng này?')) {
+            window.location.href = '${pageContext.request.contextPath}/user/cancel-booking/' + bookingId;
+        }
+    }
 </script>
 </body>
 </html> 

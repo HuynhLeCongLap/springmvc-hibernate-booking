@@ -616,7 +616,7 @@ public class AdminController {
             booking.setTotalPrice(totalPrice);
             bookingService.updateBookingStatus(booking.getId(), "CONFIRMED");
             redirectAttributes.addFlashAttribute("successMessage", "Tạo đơn đặt phòng thành công!");
-            return "redirect:/admin/bookings";
+            return "redirect:/admin/payment/" + booking.getId();
         } else {
             redirectAttributes.addFlashAttribute("errorMessage", "Đã xảy ra lỗi khi tạo đơn đặt phòng.");
             return "redirect:/admin/create-booking";
@@ -677,5 +677,17 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi khi cập nhật đơn đặt phòng: " + e.getMessage());
         }
         return "redirect:/admin/bookings";
+    }
+
+    @GetMapping("/payment/{bookingId}")
+    public String paymentPage(@PathVariable("bookingId") Long bookingId, Model model) {
+        Booking booking = bookingService.getBookingById(bookingId);
+        if (booking == null) {
+            return "redirect:/admin/bookings";
+        }
+        model.addAttribute("booking", booking);
+        model.addAttribute("bankAccount", "1234567890");
+        model.addAttribute("bankName", "VCB - Ngân hàng TMCP Ngoại thương Việt Nam");
+        return "admin/payment";
     }
 }

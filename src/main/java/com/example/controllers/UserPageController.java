@@ -57,6 +57,13 @@ public class UserPageController {
         }
         
         List<Booking> bookings = bookingService.getBookingsByUser(user);
+        java.util.Date today = new java.util.Date();
+        for (Booking booking : bookings) {
+            boolean canCancel = ("PENDING".equals(booking.getStatus()) || "CONFIRMED".equals(booking.getStatus()))
+                && booking.getBookingDateScheduled() != null
+                && booking.getBookingDateScheduled().after(today);
+            booking.setCanCancel(canCancel);
+        }
         model.addAttribute("bookings", bookings);
         return "user/bookings";
     }

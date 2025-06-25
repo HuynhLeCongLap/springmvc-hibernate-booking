@@ -45,6 +45,9 @@ public class Booking implements Serializable {
     @JoinColumn(name = "decoration_style_id")
     private DecorationStyle decorationStyle;
     
+    @Transient
+    private boolean canCancel;
+    
     // Constructors
     public Booking() {}
     
@@ -140,5 +143,13 @@ public class Booking implements Serializable {
     
     public void setDecorationStyle(DecorationStyle decorationStyle) {
         this.decorationStyle = decorationStyle;
+    }
+    
+    public boolean isCanCancel() {
+        return canCancel;
+    }
+    
+    public void setCanCancel(boolean canCancel) {
+        this.canCancel = canCancel;
     }
 } 

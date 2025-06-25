@@ -279,7 +279,12 @@
                         <td><fmt:formatDate value="${booking.bookingDateScheduled}" pattern="dd/MM/yyyy" /></td>
                         <td>${booking.timeSlot.startTime} - ${booking.timeSlot.endTime}</td>
                         <td>${booking.decorationStyle.name}</td>
-                        <td><fmt:formatNumber value="${booking.totalPrice}" pattern="#,##0 ₫" /></td>
+                        <td>
+                          <c:set var="roomPrice" value="${not empty booking.room.price ? booking.room.price : 0}" />
+                          <c:set var="stylePrice" value="${not empty booking.decorationStyle.price ? booking.decorationStyle.price : 0}" />
+                          <c:set var="totalPrice" value="${roomPrice + stylePrice}" />
+                          <fmt:formatNumber value="${totalPrice}" pattern="#,##0 ₫" />
+                        </td>
                         <td>
                           <c:choose>
                             <c:when test="${booking.status == 'PENDING'}">

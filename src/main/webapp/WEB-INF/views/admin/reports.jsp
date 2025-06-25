@@ -310,7 +310,7 @@
                                             <td colspan="7" class="text-center text-muted">Không có đơn đặt phòng nào trong khoảng thời gian này.</td>
                                         </tr>
                                     </c:if>
-                                    <c:forEach var="booking" items="${bookings}" begin="0" end="9">
+                                    <c:forEach var="booking" items="${bookings}">
                                         <tr>
                                             <td>#${booking.id}</td>
                                             <td>${booking.user != null ? booking.user.fullName : ''}</td>
@@ -339,13 +339,6 @@
                                             <td><fmt:formatNumber value="${booking.totalPrice}" pattern="#,##0 ₫" /></td>
                                         </tr>
                                     </c:forEach>
-                                    <c:if test="${bookings.size() > 10}">
-                                        <div class="text-center mt-3">
-                                            <a href="${pageContext.request.contextPath}/admin/bookings" class="btn btn-outline-primary">
-                                                <i class="bi bi-list"></i> Xem tất cả
-                                            </a>
-                                        </div>
-                                    </c:if>
                                 </tbody>
                             </table>
                         </div>
