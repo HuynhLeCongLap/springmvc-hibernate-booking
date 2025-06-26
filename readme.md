@@ -32,14 +32,14 @@ Hệ thống đặt phòng chiếu phim mini, được xây dựng với Spring 
    - Hệ thống hiển thị các phòng còn trống trong khung giờ đó
    - Người dùng chọn một phòng
    - Người dùng chọn kiểu trang trí
-   - Người dùng xác nhận đặt phòng và thực hiện thanh toán
-   - Đơn đặt phòng chuyển sang trạng thái "Chờ xác nhận"
+   - Ng
+   - Đơn đặt phòng chuyển sang trạng thái "ười dùng xác nhận đặt phòng và thực hiện thanh toánChờ xác nhận"
 
 2. **Quản lý đơn đặt phòng**:
 
    - Quản trị viên xem danh sách các đơn đặt phòng
    - Quản trị viên xác nhận hoặc từ chối đơn đặt phòng
-   - Người dùng được thông báo về trạng thái đơn đặt phòng
+   - Nhònggười dùng được thông báo về trạng thái đơn đặt p
 
 3. **Xem lịch sử đặt phòng**:
    - Người dùng có thể xem danh sách các đơn đặt phòng của mình
